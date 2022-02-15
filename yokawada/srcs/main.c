@@ -6,12 +6,13 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:57:24 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/15 11:58:34 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/15 21:30:13 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <term3d.h>
+#include "term3d.h"
 
+// 現在時刻をマイクロ秒単位で返す
 t_ut	t3_get_ut(void)
 {
 	struct timeval	tv;
@@ -273,6 +274,11 @@ void	t3_init_optics(t_system *system)
 	system->optics.sq_size_x = (double)(+4 - -4) / T3_WIDTH;
 	system->optics.sq_size_y = (double)(+4 - -4) / T3_HEIGHT;
 	system->optics.phi = 0;
+	// 2秒で半周するように角速度を設定
+	system->optics.omega = M_PI * 2 / 1000000;
+	// 1000000マイクロ秒(=1秒)をFPSで割ると、1フレームあたりのマイクロ秒数(uspf)が算出される。
+	// これを使ってFPSをコントロールする(もっといい方法がありそう)。
+	system->optics.uspf = 1000000 / T3_FPS;
 }
 
 // ピクセルバッファをクリア
@@ -309,7 +315,6 @@ void	t3_fill_pixelbuffer(t_system *system)
 			if (xi < system->optics.width && yi < system->optics.height)
 			{
 				system->optics.pixels[yi][xi] += 1;
-				// printf("%zu: (%f, %f) -> (%zu, %zu)\n", i, x, y, xi, yi);
 			}
 		}
 		i += 1;
@@ -356,17 +361,19 @@ int main(int argc, char **argv)
 	{
 		exit(1);
 	}
+	// [ファイルからのデータ読み取り]
 	system.points_original = t3_read_from_file(argv[1]);
 	if (!system.points_original)
 	{
 		exit(1);
 	}
 	system.n_points = 0;
-	
 	while (rd_is_finite(system.points_original[system.n_points].x))
 	{
 		system.n_points += 1;
 	}
+
+	// [処理用データ構造の初期化]
 	system.points_animated = malloc(sizeof(t_vector3d) * (system.n_points + 1));
 	t3_init_optics(&system);
 	t3_centralize_points(system.n_points, system.points_original);
@@ -383,7 +390,8 @@ int main(int argc, char **argv)
 		t3_fill_pixelbuffer(&system);
 		t1 = t3_wait_until(t0 + system.optics.uspf);
 		t3_render_pixel_buffer(&system);
-		system.optics.phi += 0.04;
+		// powとかsinがある係数は、回転速度をいい感じに揺らすためにかけている
+		system.optics.phi += (0.1 + pow(sin(system.optics.phi), 2)) * system.optics.omega * (t1 - t0);
 		t0 = t1;
 	}
 	
