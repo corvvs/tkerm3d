@@ -6,21 +6,24 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:58:31 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/15 10:52:45 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/15 11:53:36 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TERM3D_H
 # define TERM3D_H
+# include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <math.h>
 # include <libft.h>
+# include <sys/time.h>
 
-# define T3_WIDTH 40
-# define T3_HEIGHT 20
+# define T3_WIDTH 60
+# define T3_HEIGHT 30
 
+typedef uint64_t		t_ut;
 
 // 3次元ベクトル構造体
 typedef struct s_vector3d {

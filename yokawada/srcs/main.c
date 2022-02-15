@@ -6,11 +6,20 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:57:24 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/15 11:00:22 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/15 11:58:34 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <term3d.h>
+
+t_ut	t3_get_ut(void)
+{
+	struct timeval	tv;
+
+	if (gettimeofday(&tv, NULL))
+		return (0);
+	return ((tv.tv_sec) * 1e6 + tv.tv_usec);
+}
 
 // doubleをビット操作するための共用体
 typedef union u_ull_double
@@ -303,8 +312,12 @@ void	t3_render_pixel_buffer(t_system *system)
 		j = 0;
 		while (j < system->optics.width)
 		{
-			if (system->optics.pixels[i][j] > 0)
+			if (system->optics.pixels[i][j] > 3)
 				buffer[i * (system->optics.width + 1) + j] = '#';
+			else if (system->optics.pixels[i][j] > 1)
+				buffer[i * (system->optics.width + 1) + j] = '*';
+			else if (system->optics.pixels[i][j] > 0)
+				buffer[i * (system->optics.width + 1) + j] = '.';
 			else
 				buffer[i * (system->optics.width + 1) + j] = ' ';
 			j += 1;
@@ -341,6 +354,7 @@ int main(int argc, char **argv)
 	t3_centralize_points(system.n_points, system.points_original);
 
 	t3_affine_identity(system.transform_static);
+	t_ut t0 = t3_get_ut();
 	while (true)
 	{
 		t3_affine_rot_y(system.transform_animated, system.transform_static, system.optics.phi);
@@ -348,7 +362,13 @@ int main(int argc, char **argv)
 		t3_clear_pixelbuffer(&system);
 		t3_fill_pixelbuffer(&system);
 		t3_render_pixel_buffer(&system);
-		system.optics.phi += 0.001;
+		system.optics.phi += 0.04;
+		t_ut t1 = t3_get_ut();
+		if (t0 + 16666 > t1)
+		{
+			usleep(t0 + 16666 - t1);
+		}
+		t0 = t1;
 	}
 	
 }
