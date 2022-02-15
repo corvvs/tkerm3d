@@ -2,3 +2,6 @@ objs/
 term3d
 compile_flags.txt
 .vscode
+*.o
+*.a
+*.out
