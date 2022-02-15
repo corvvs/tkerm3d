@@ -21,6 +21,24 @@ t_ut	t3_get_ut(void)
 	return ((tv.tv_sec) * 1e6 + tv.tv_usec);
 }
 
+// this_time を超えるまで1000マイクロ秒ずつusleepする。
+// その後、現在時刻を返す。
+t_ut	t3_wait_until(t_ut this_time)
+{
+	t_ut	t1;
+
+	while (true)
+	{
+		t1 = t3_get_ut();
+		if (this_time <= t1)
+		{
+			break;
+		}
+		usleep(1000);
+	}
+	return (t1);
+}
+
 // doubleをビット操作するための共用体
 typedef union u_ull_double
 {
@@ -352,22 +370,20 @@ int main(int argc, char **argv)
 	system.points_animated = malloc(sizeof(t_vector3d) * (system.n_points + 1));
 	t3_init_optics(&system);
 	t3_centralize_points(system.n_points, system.points_original);
-
 	t3_affine_identity(system.transform_static);
-	t_ut t0 = t3_get_ut();
+
+	// [描画ループ]
+	t_ut	t0 = t3_get_ut();
+	t_ut	t1;
 	while (true)
 	{
 		t3_affine_rot_y(system.transform_animated, system.transform_static, system.optics.phi);
 		t3_transform_to_render(&system);
 		t3_clear_pixelbuffer(&system);
 		t3_fill_pixelbuffer(&system);
+		t1 = t3_wait_until(t0 + system.optics.uspf);
 		t3_render_pixel_buffer(&system);
 		system.optics.phi += 0.04;
-		t_ut t1 = t3_get_ut();
-		if (t0 + 16666 > t1)
-		{
-			usleep(t0 + 16666 - t1);
-		}
 		t0 = t1;
 	}
 	
