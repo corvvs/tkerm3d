@@ -324,11 +324,13 @@ void	t3_fill_pixelbuffer(t_system *system)
 // ピクセルバッファを表示
 void	t3_render_pixel_buffer(t_system *system)
 {
-	char	buffer[T3_HEIGHT * (T3_WIDTH + 1)];
-	char	nls[T3_HEIGHT];
+	char	real_buffer[4 + T3_HEIGHT * (T3_WIDTH + 1)];
+	char	*buffer;
 	size_t	i;
 	size_t	j;
 
+	memcpy(real_buffer, "\x1b[H", 4);
+	buffer = real_buffer + 4;
 	i = 0;
 	while (i < system->optics.height)
 	{
@@ -348,9 +350,7 @@ void	t3_render_pixel_buffer(t_system *system)
 		buffer[i * (system->optics.width + 1) + j] = '\n';
 		i += 1;
 	}
-	memset(nls, '\n', T3_HEIGHT);
-	write(STDOUT_FILENO, nls, T3_HEIGHT);
-	write(STDOUT_FILENO, buffer, T3_HEIGHT * (T3_WIDTH + 1));
+	write(STDOUT_FILENO, real_buffer, 4 + T3_HEIGHT * (T3_WIDTH + 1));
 }
 
 int main(int argc, char **argv)
