@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:58:31 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/15 20:43:04 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/15 23:14:44 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,5 +79,24 @@ typedef struct s_system {
 } t_system;
 
 char	*rd_read_file_content(const char *filename);
+
+bool	rd_is_finite(const double val);
+double	rd_nan(void);
+size_t	t3_count_lines(char **lines);
+bool	t3_vectorize(const char *str, t_vector3d *vector);
+t_vector3d	*t3_read_from_file(const char *file_path);
+void	rd_free_strarray(char ***pstrs);
+
+void	t3_affine_identity(t_affine a);
+void	t3_affine_copy(t_affine dest, t_affine src);
+void	t3_affine_rot_x(t_affine dest, t_affine src, double phi);
+void	t3_affine_rot_y(t_affine dest, t_affine src, double phi);
+void	t3_apply_transform(t_vector3d *v2, t_vector3d *v1, t_affine a);
+
+t_ut	t3_get_ut(void);
+t_ut	t3_wait_until(t_ut this_time);
+void	t3_clear_pixelbuffer(t_system *system);
+void	t3_fill_pixelbuffer(t_system *system);
+void	t3_render_pixel_buffer(t_system *system);
 
 #endif
