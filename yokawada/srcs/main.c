@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:57:24 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/16 11:16:27 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/16 11:23:16 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	t3_centralize_points(size_t n, t_vector3d *points)
 // opticsの設定
 void	t3_init_optics(t_system *system)
 {
+	system->optics.animate = true;
 	system->optics.width = T3_WIDTH;
 	system->optics.height = T3_HEIGHT;
 	system->optics.scale_factor = 1;
@@ -164,6 +165,11 @@ void	t3_update_by_key(t_system *system, int key)
 		system->optics.scale_factor *= 1.05;
 		dprintf(STDERR_FILENO, "scale -> %f\n", system->optics.scale_factor);
 	}
+	else if (key == ' ')
+	{
+		system->optics.animate = !system->optics.animate;
+		dprintf(STDERR_FILENO, "animate -> %s\n", (char *[2]){"NO","YES"}[!!system->optics.animate]);
+	}
 }
 
 // [描画ループ]
@@ -186,7 +192,8 @@ void	t3_render_loop(t_system *system)
 		t1 = t3_wait_until(t0 + system->optics.uspf);
 		t3_render_pixel_buffer(system);
 		// powとかsinがある係数は、回転速度をいい感じに揺らすためにかけている
-		system->optics.phi += 2 * (0.1 + pow(sin(system->optics.phi), 4)) * system->optics.omega * (t1 - t0);
+		if (system->optics.animate)
+			system->optics.phi += 2 * (0.1 + pow(sin(system->optics.phi), 4)) * system->optics.omega * (t1 - t0);
 		t0 = t1;
 		key_pressed = t3_get_key();
 		if (key_pressed)

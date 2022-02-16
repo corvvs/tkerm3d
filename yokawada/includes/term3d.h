@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:58:31 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/16 11:14:15 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/16 11:24:39 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,9 @@ typedef struct s_optics {
 	double		fps;
 	// uspf(マイクロ秒毎フレーム)
 	t_ut		uspf;
+
+	// 時間変化するかどうかのフラグ
+	bool		animate;
 } t_optics;
 
 // 系全体を表す構造体
