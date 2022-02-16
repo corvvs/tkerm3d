@@ -83,7 +83,7 @@ void	t3_fill_pixelbuffer(t_system *system)
 // ピクセルバッファを表示
 void	t3_render_pixel_buffer(t_system *system)
 {
-	char	real_buffer[4 + T3_HEIGHT * (T3_WIDTH + 1)];
+	char	real_buffer[4 + system->optics.height * (system->optics.width + 1)];
 	char	*buffer;
 	size_t	i;
 	size_t	j;
@@ -109,5 +109,5 @@ void	t3_render_pixel_buffer(t_system *system)
 		buffer[i * (system->optics.width + 1) + j] = '\n';
 		i += 1;
 	}
-	write(STDOUT_FILENO, real_buffer, 4 + T3_HEIGHT * (T3_WIDTH + 1));
+	write(STDOUT_FILENO, real_buffer, 4 + system->optics.height * (system->optics.width + 1));
 }

@@ -22,9 +22,12 @@
 # include <sys/time.h>
 # include <fcntl.h>
 # include <sys/select.h>
+# include <sys/ioctl.h>
 
 # define T3_WIDTH 160
 # define T3_HEIGHT 60
+# define T3_MAX_WIDTH 350
+# define T3_MAX_HEIGHT 100
 typedef uint64_t	t_ut;
 
 // 3次元ベクトル構造体
@@ -57,7 +60,7 @@ typedef struct s_optics {
 	size_t		width;
 	size_t		height;
 	// ピクセルバッファ
-	size_t		pixels[T3_HEIGHT][T3_WIDTH];
+	size_t		pixels[T3_MAX_HEIGHT][T3_MAX_WIDTH];
 	double		fps;
 	// uspf(マイクロ秒毎フレーム)
 	t_ut		uspf;
