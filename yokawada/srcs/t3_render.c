@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 21:44:13 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/15 21:45:15 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/16 11:06:19 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,8 @@ void	t3_fill_pixelbuffer(t_system *system)
 	i = 0;
 	while (i < system->n_points)
 	{
-		x = system->points_animated[i].x + system->optics.offset_x;
-		y = system->points_animated[i].y + system->optics.offset_y;
+		x = system->points_animated[i][0];
+		y = system->points_animated[i][1];
 		if (x >= 0 && y >= 0)
 		{
 			xi = (size_t)(x / system->optics.sq_size_x);

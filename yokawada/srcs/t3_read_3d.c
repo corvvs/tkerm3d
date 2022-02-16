@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 22:47:34 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/15 22:48:49 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/16 11:06:57 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ size_t	t3_count_lines(char **lines)
 }
 
 // カンマ区切りの文字列をベクトル(double,double,double)に変換する。失敗したらfalseを返す。
-bool	t3_vectorize(const char *str, t_vector3d *vector)
+bool	t3_vectorize(const char *str, t_vector3d vector)
 {
 	char			**splitted;
 
@@ -81,11 +81,11 @@ bool	t3_vectorize(const char *str, t_vector3d *vector)
 		return (false);
 	if (t3_count_lines(splitted) == 3)
 	{
-		vector->x = strtod(splitted[0], NULL);
-		vector->y = strtod(splitted[1], NULL);
-		vector->z = strtod(splitted[2], NULL);
-		if (rd_is_finite(vector->x) && rd_is_finite(vector->y)
-			&& rd_is_finite(vector->z))
+		vector[0] = strtod(splitted[0], NULL);
+		vector[1] = strtod(splitted[1], NULL);
+		vector[2] = strtod(splitted[2], NULL);
+		if (rd_is_finite(vector[0]) && rd_is_finite(vector[1])
+			&& rd_is_finite(vector[2]))
 		{
 			rd_free_strarray(&splitted);
 			return (true);
@@ -121,21 +121,21 @@ t_vector3d	*t3_read_from_file(const char *file_path)
 	{
 		return (NULL);
 	}
-	points[n].x = rd_nan();
+	points[n][0] = rd_nan();
 	i = 0;
 	double sx = 0;
 	double sy = 0;
 	double sz = 0;
 	while (i < n)
 	{
-		if (!t3_vectorize(lines[i], &points[i]))
+		if (!t3_vectorize(lines[i], points[i]))
 		{
 			// しっぱい
 			return (NULL);
 		}
-		sx += points[i].x;
-		sy += points[i].y;
-		sz += points[i].z;
+		sx += points[i][0];
+		sy += points[i][1];
+		sz += points[i][2];
 		i += 1;
 	}
 	// printf("centroid: (%f, %f, %f)\n", sx / n, sy / n, sz / n);

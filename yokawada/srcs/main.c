@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:57:24 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/16 10:16:48 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/16 11:16:27 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,24 +18,24 @@ void	t3_centralize_points(size_t n, t_vector3d *points)
 	size_t		i;
 	t_vector3d	c;
 
-	bzero(&c, sizeof(t_vector3d));
+	bzero(&c, sizeof(double) * 3);
 	i = 0;
 	while (i < n)
 	{
-		c.x += points[i].x;
-		c.y += points[i].y;
-		c.z += points[i].z;
+		c[0] += points[i][0];
+		c[1] += points[i][1];
+		c[2] += points[i][2];
 		i += 1;
 	}
-	c.x /= n;
-	c.y /= n;
-	c.z /= n;
+	c[0] /= n;
+	c[1] /= n;
+	c[2] /= n;
 	i = 0;
 	while (i < n)
 	{
-		points[i].x -= c.x;
-		points[i].y -= c.y;
-		points[i].z -= c.z;
+		points[i][0] -= c[0];
+		points[i][1] -= c[1];
+		points[i][2] -= c[2];
 		i += 1;
 	}
 }
@@ -45,10 +45,11 @@ void	t3_init_optics(t_system *system)
 {
 	system->optics.width = T3_WIDTH;
 	system->optics.height = T3_HEIGHT;
+	system->optics.scale_factor = 1;
 	system->optics.offset_x = 4;
 	system->optics.offset_y = 4;
-	system->optics.sq_size_x = (double)(+4 - -4) / T3_WIDTH;
-	system->optics.sq_size_y = (double)(+4 - -4) / T3_HEIGHT;
+	system->optics.sq_size_x = (double)(2 * system->optics.offset_x) / T3_WIDTH;
+	system->optics.sq_size_y = (double)(2 * system->optics.offset_y) / T3_HEIGHT;
 	system->optics.phi = 0;
 	// 2秒で半周するように角速度を設定
 	system->optics.omega = M_PI / 1000000;
@@ -76,8 +77,8 @@ void	t3_transform_to_render(t_system *system)
 	while (i < system->n_points)
 	{
 		t3_apply_transform(
-			&system->points_animated[i],
-			&system->points_original[i],
+			system->points_animated[i],
+			system->points_original[i],
 			system->transform_animated);
 		i += 1;
 	}
@@ -153,6 +154,16 @@ void	t3_update_by_key(t_system *system, int key)
 		system->optics.uspf = 1000000 / system->optics.fps;
 		dprintf(STDERR_FILENO, "fps -> %f\n", system->optics.fps);
 	}
+	else if (key == '1')
+	{
+		system->optics.scale_factor /= 1.05;
+		dprintf(STDERR_FILENO, "scale -> %f\n", system->optics.scale_factor);
+	}
+	else if (key == '2')
+	{
+		system->optics.scale_factor *= 1.05;
+		dprintf(STDERR_FILENO, "scale -> %f\n", system->optics.scale_factor);
+	}
 }
 
 // [描画ループ]
@@ -164,7 +175,11 @@ void	t3_render_loop(t_system *system)
 
 	while (true)
 	{
-		t3_affine_rot_y(system->transform_animated, system->transform_static, system->optics.phi);
+		t3_affine_scale(system->transform_animated, system->transform_static,
+			(t_vector3d){system->optics.scale_factor, system->optics.scale_factor, system->optics.scale_factor});
+		t3_affine_rot_y(system->transform_animated, system->transform_animated, system->optics.phi);
+		t3_affine_translate(system->transform_animated, system->transform_animated,
+			(t_vector3d){system->optics.offset_x, system->optics.offset_y, 0});
 		t3_transform_to_render(system);
 		t3_clear_pixelbuffer(system);
 		t3_fill_pixelbuffer(system);
@@ -197,7 +212,7 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 	system.n_points = 0;
-	while (rd_is_finite(system.points_original[system.n_points].x))
+	while (rd_is_finite(system.points_original[system.n_points][0]))
 	{
 		system.n_points += 1;
 	}

@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:58:31 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/16 10:11:55 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/16 11:14:15 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,7 @@
 typedef uint64_t	t_ut;
 
 // 3次元ベクトル構造体
-typedef struct s_vector3d {
-	double	x;
-	double	y;
-	double	z;
-} t_vector3d;
+typedef double	t_vector3d[3];
 
 // アフィン変換行列(4x4)
 // a[16]でもいい？
@@ -46,6 +42,9 @@ typedef struct s_optics {
 	// オフセット
 	double		offset_x;
 	double		offset_y;
+	// 位置(-offset_x, -offset_y)が原点(0, 0)に来るように移動してからレンダリングする
+	// スケールファクター
+	double		scale_factor;
 
 	// 回転角
 	double		phi;
@@ -85,15 +84,17 @@ char	*rd_read_file_content(const char *filename);
 bool	rd_is_finite(const double val);
 double	rd_nan(void);
 size_t	t3_count_lines(char **lines);
-bool	t3_vectorize(const char *str, t_vector3d *vector);
+bool	t3_vectorize(const char *str, t_vector3d vector);
 t_vector3d	*t3_read_from_file(const char *file_path);
 void	rd_free_strarray(char ***pstrs);
 
 void	t3_affine_identity(t_affine a);
-void	t3_affine_copy(t_affine dest, t_affine src);
-void	t3_affine_rot_x(t_affine dest, t_affine src, double phi);
-void	t3_affine_rot_y(t_affine dest, t_affine src, double phi);
-void	t3_apply_transform(t_vector3d *v2, t_vector3d *v1, t_affine a);
+void	t3_affine_copy(t_affine dest, const t_affine src);
+void	t3_affine_translate(t_affine dest, const t_affine src, const t_vector3d vec);
+void	t3_affine_scale(t_affine dest, const t_affine src, const t_vector3d vec);
+void	t3_affine_rot_x(t_affine dest, const t_affine src, double phi);
+void	t3_affine_rot_y(t_affine dest, const t_affine src, double phi);
+void	t3_apply_transform(t_vector3d v2, const t_vector3d v1, t_affine a);
 
 t_ut	t3_get_ut(void);
 t_ut	t3_wait_until(t_ut this_time);
