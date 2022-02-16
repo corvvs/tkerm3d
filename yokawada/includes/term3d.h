@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:58:31 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/15 23:14:44 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/16 10:11:55 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,14 @@
 # include <stdlib.h>
 # include <string.h>
 # include <math.h>
+# include <termios.h>
 # include "libft.h"
 # include <sys/time.h>
+# include <fcntl.h>
+# include <sys/select.h>
 
 # define T3_WIDTH 160
 # define T3_HEIGHT 60
-# define T3_FPS 120
-
 typedef uint64_t	t_ut;
 
 // 3次元ベクトル構造体
@@ -56,6 +57,7 @@ typedef struct s_optics {
 	size_t		height;
 	// ピクセルバッファ
 	size_t		pixels[T3_HEIGHT][T3_WIDTH];
+	double		fps;
 	// uspf(マイクロ秒毎フレーム)
 	t_ut		uspf;
 } t_optics;
