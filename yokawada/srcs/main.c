@@ -43,14 +43,16 @@ void	t3_centralize_points(size_t n, t_vector3d *points)
 // opticsの設定
 void	t3_init_optics(t_system *system)
 {
+	struct winsize ws;
+	ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws);
 	system->optics.animate = true;
-	system->optics.width = T3_WIDTH;
-	system->optics.height = T3_HEIGHT;
+	system->optics.width = ws.ws_col < T3_MAX_WIDTH ? ws.ws_col : T3_MAX_WIDTH;
+	system->optics.height = ws.ws_row < T3_MAX_HEIGHT ? ws.ws_row : T3_MAX_HEIGHT;
 	system->optics.scale_factor = 1;
 	system->optics.offset_x = 4;
 	system->optics.offset_y = 4;
-	system->optics.sq_size_x = (double)(2 * system->optics.offset_x) / T3_WIDTH;
-	system->optics.sq_size_y = (double)(2 * system->optics.offset_y) / T3_HEIGHT;
+	system->optics.sq_size_x = (double)(2 * system->optics.offset_x) / system->optics.width;
+	system->optics.sq_size_y = (double)(2 * system->optics.offset_y) / system->optics.height;
 	memcpy(system->optics.rot_axis, (t_vector3d){0, 1, 0}, sizeof(double) * 3);
 	system->optics.phi = 0;
 	// 2秒で半周するように角速度を設定
