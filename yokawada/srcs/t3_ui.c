@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 10:37:24 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/18 22:42:53 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/19 02:29:47 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,11 @@ void	t3_update_by_key(t_system *system)
 	{
 		system->optics.animate = !system->optics.animate;
 		dprintf(STDERR_FILENO, "animate -> %s\n", (char *[2]){"NO","YES"}[!!system->optics.animate]);
+	}
+	else if (key == 'r')
+	{
+		dprintf(STDERR_FILENO, "reset parameters\n");
+		t3_init_render_params(system);
 	}
 	else if (key == T3_CHAR_ESC && system->src_mode == T3_SRC_TEXT)
 	{

@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:58:31 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/19 00:47:55 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/19 02:07:04 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 # define T3_GLYPH_HEIGHT 40
 # define T3_GLYPH_SCALE 0.1
 # define T3_MAX_MSGLEN 20
+// 画面クリア用エスケープシーケンス
 # define T3_ES_CLEAR "\x1b[H"
 // キー
 # define T3_CHAR_ESC 27
@@ -120,9 +121,15 @@ typedef struct s_system {
 	char		message[T3_MAX_MSGLEN + 1];
 	// 現在のメッセージ長
 	size_t		len_message;
+
+	// ピクセルバッファのサイズ
+	size_t		n_pixelbuffer;
+	char		*pixelbuffer;
 }	t_system;
 
 char	*rd_read_file_content(const char *filename);
+
+void	t3_init_render_params(t_system *system);
 
 bool	t3_is_fintie(const double val);
 double	t3_nan(void);
@@ -143,7 +150,7 @@ t_ut	t3_get_ut(void);
 t_ut	t3_wait_until(t_ut this_time);
 void	t3_clear_pixelbuffer(t_system *system);
 void	t3_fill_pixelbuffer(t_system *system);
-void	t3_render_pixel_buffer(t_system *system);
+void	t3_render(t_system *system);
 
 bool	t3_scan_message(t_system *system);
 void	t3_repoint(t_system *system);
@@ -161,5 +168,8 @@ t_ut	t3_wait_until(t_ut this_time);
 bool	t3_is_fintie(const double val);
 double	t3_nan(void);
 bool	t3_vectorize(const char *str, t_vector3d vector);
+
+int		t3_max(int a, int b);
+int		t3_min(int a, int b);
 
 #endif

@@ -6,56 +6,47 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:57:24 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/19 00:47:38 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/19 02:30:31 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "term3d.h"
 
 // opticsの設定
-void	t3_init_optics(t_system *system)
+void	t3_init_render_params(t_system *system)
 {
 	struct winsize	ws;
 
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws);
 	system->optics.animate = true;
-	system->optics.width = ws.ws_col < T3_MAX_WIDTH ? ws.ws_col : T3_MAX_WIDTH;
-	system->optics.height = ws.ws_row < T3_MAX_HEIGHT ? ws.ws_row : T3_MAX_HEIGHT;
+	system->optics.width = t3_max(2, t3_min(T3_MAX_WIDTH, ws.ws_col));
+	system->optics.height = t3_max(2, t3_min(T3_MAX_HEIGHT, ws.ws_row - 2));
 	system->optics.scale_factor = 1;
 	system->optics.offset_x = 4;
 	system->optics.offset_y = 4;
-	system->optics.sq_size_x = (double)(2 * system->optics.offset_x) / system->optics.width;
-	system->optics.sq_size_y = (double)(2 * system->optics.offset_y) / system->optics.height;
+	system->optics.sq_size_x
+		= (double)(2 * system->optics.offset_x) / system->optics.width;
+	system->optics.sq_size_y
+		= (double)(2 * system->optics.offset_y) / system->optics.height;
 	memcpy(system->optics.rot_axis, (t_vector3d){0, 1, 0}, sizeof(double) * 3);
 	system->optics.phi = 0;
 	system->optics.omega = M_PI / 1000000;
 	system->optics.fps = 120;
 	system->optics.uspf = 1000000 / system->optics.fps;
+	system->n_pixelbuffer
+		= system->optics.height * (system->optics.width + 1);
+	if (system->pixelbuffer)
+		free(system->pixelbuffer);
+	system->pixelbuffer = malloc(sizeof(char) * system->n_pixelbuffer);
 }
 
 // [処理用データ構造の初期化]
 void	t3_setup_system(t_system *system)
 {
-	t3_init_optics(system);
+	t3_init_render_params(system);
 	t3_affine_identity(system->transform_static);
 	t3_centralize_points(system->n_points, system->points_original);
 	t3_repoint(system);
-}
-
-//　表示変換を適用する
-void	t3_transform_to_render(t_system *system)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < system->n_points)
-	{
-		t3_apply_transform(
-			system->points_animated[i],
-			system->points_original[i],
-			system->transform_animated);
-		i += 1;
-	}
 }
 
 // 表示用変換の構成
@@ -73,6 +64,23 @@ void	t3_forming_transform(t_system *system)
 		(t_vector3d){opt->offset_x, opt->offset_y, 0});
 }
 
+//　表示変換を適用する
+void	t3_transform_to_render(t_system *system)
+{
+	size_t	i;
+
+	t3_forming_transform(system);
+	i = 0;
+	while (i < system->n_points)
+	{
+		t3_apply_transform(
+			system->points_animated[i],
+			system->points_original[i],
+			system->transform_animated);
+		i += 1;
+	}
+}
+
 // [描画ループ]
 void	t3_render_loop(t_system *system)
 {
@@ -84,12 +92,9 @@ void	t3_render_loop(t_system *system)
 	opt = &system->optics;
 	while (true)
 	{
-		t3_forming_transform(system);
 		t3_transform_to_render(system);
-		t3_clear_pixelbuffer(system);
-		t3_fill_pixelbuffer(system);
+		t3_render(system);
 		t1 = t3_wait_until(t0 + opt->uspf);
-		t3_render_pixel_buffer(system);
 		if (opt->animate)
 			opt->phi += 2 * (0.1 + pow(sin(opt->phi), 0)) * opt->omega * (t1 - t0);
 		t0 = t1;
