@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 11:36:10 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/15 20:16:15 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/19 00:48:19 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,6 @@ char	*rd_read_file_content(const char *filename)
 	int		fd;
 	char	*content;
 
-	// if (!ft_str_endswith(filename, ".rt"))
-	// 	return (quit_with_error("extension is not rt"));
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
 		return (quit_with_error("failed to open file"));

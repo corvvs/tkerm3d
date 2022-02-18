@@ -6,39 +6,11 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 21:44:13 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/16 11:06:19 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/18 22:51:50 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "term3d.h"
-
-// 現在時刻をマイクロ秒単位で返す
-t_ut	t3_get_ut(void)
-{
-	struct timeval	tv;
-
-	if (gettimeofday(&tv, NULL))
-		return (0);
-	return ((tv.tv_sec) * 1e6 + tv.tv_usec);
-}
-
-// this_time を超えるまで1000マイクロ秒ずつusleepする。
-// その後、現在時刻を返す。
-t_ut	t3_wait_until(t_ut this_time)
-{
-	t_ut	t1;
-
-	while (true)
-	{
-		t1 = t3_get_ut();
-		if (this_time <= t1)
-		{
-			break;
-		}
-		usleep(1000);
-	}
-	return (t1);
-}
 
 // ピクセルバッファをクリア
 void	t3_clear_pixelbuffer(t_system *system)
@@ -88,7 +60,7 @@ void	t3_render_pixel_buffer(t_system *system)
 	size_t	i;
 	size_t	j;
 
-	memcpy(real_buffer, "\x1b[H", 4);
+	memcpy(real_buffer, T3_ES_CLEAR, 4);
 	buffer = real_buffer + 4;
 	i = 0;
 	while (i < system->optics.height)

@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 21:40:43 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/16 14:17:38 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/19 00:24:46 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ void	t3_affine_copy(t_affine dest, const t_affine src)
 }
 
 // vec方向への平行移動とアフィン変換 src を合成したものを dest にセットする
-void	t3_affine_translate(t_affine dest, const t_affine src, const t_vector3d vec)
+void	t3_affine_translate(
+	t_affine dest, const t_affine src, const t_vector3d vec)
 {
 	const double	r03 = src[0][3] + vec[0];
 	const double	r13 = src[1][3] + vec[1];
@@ -74,7 +75,8 @@ void	t3_affine_scale(t_affine dest, const t_affine src, const t_vector3d vec)
 }
 
 // アフィン変換 src1 と src2 の合成を dest にセットする
-void	t3_affine_compose(t_affine dest, const t_affine src1, const t_affine src2)
+void	t3_affine_compose(
+	t_affine dest, const t_affine src1, const t_affine src2)
 {
 	t_affine	temp;
 	int			i;
@@ -98,23 +100,27 @@ void	t3_affine_compose(t_affine dest, const t_affine src1, const t_affine src2)
 
 // axis まわりの回転(角度phi)とアフィン変換 src を合成したものを dest にセットする
 // || axis || == 1 を仮定する。
-void	t3_affine_rot_axis(t_affine dest, const t_affine src, const t_vector3d n, double phi)
+void	t3_affine_rot_axis(
+	t_affine dest, const t_affine src, const t_vector3d n, double phi)
 {
 	t_affine		rot;
 	const double	c = cos(phi);
 	const double	s = sin(phi);
 	const double	rc = 1 - c;
 
-	memcpy(rot[0], (double[]){
-		c + n[0] * n[0] * rc, n[0] * n[1] * rc - n[2] * s, n[2] * n[0] * rc + n[1] * s, 0
-		}, sizeof(double) * 4);
-	memcpy(rot[1], (double[]){
-		n[0] * n[1] * rc + n[2] * s, c + n[1] * n[1] * rc, n[1] * n[2] * rc - n[0] * s, 0
-		}, sizeof(double) * 4);
-	memcpy(rot[2], (double[]){
-		n[2] * n[0] * rc - n[1] * s, n[1] * n[2] * rc + n[0] * s, c + n[2] * n[2] * rc, 0
-	}, sizeof(double) * 4);
-	memcpy(rot[3], (double[]){0, 0, 0, 1}, sizeof(double) * 4);
+	memcpy(rot[0], (double []){
+		c + n[0] * n[0] * rc,
+		n[0] * n[1] * rc - n[2] * s,
+		n[2] * n[0] * rc + n[1] * s, 0}, sizeof(double) * 4);
+	memcpy(rot[1], (double []){
+		n[0] * n[1] * rc + n[2] * s,
+		c + n[1] * n[1] * rc,
+		n[1] * n[2] * rc - n[0] * s, 0}, sizeof(double) * 4);
+	memcpy(rot[2], (double []){
+		n[2] * n[0] * rc - n[1] * s,
+		n[1] * n[2] * rc + n[0] * s,
+		c + n[2] * n[2] * rc, 0}, sizeof(double) * 4);
+	memcpy(rot[3], (double []){0, 0, 0, 1}, sizeof(double) * 4);
 	t3_affine_compose(dest, rot, src);
 }
 
