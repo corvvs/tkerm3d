@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:57:24 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/19 02:30:31 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/19 03:17:45 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,15 @@ void	t3_render_loop(t_system *system)
 	}
 }
 
+// stdoutはどちらもターミナルになっている必要がある。
+void	t3_check_terminal()
+{
+	if (isatty(STDOUT_FILENO) == 1)
+		return ;
+	dprintf(STDERR_FILENO, "Error: stdout shoule be bound to tty.\n");
+	exit(1);
+}
+
 int main(int argc, char **argv)
 {
 	t_system	system;
@@ -110,6 +119,7 @@ int main(int argc, char **argv)
 	{
 		exit(1);
 	}
+	t3_check_terminal();
 	bzero(&system, sizeof(t_system));
 	if (argc == 1)
 	{
