@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:57:24 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/19 03:17:45 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/19 10:57:39 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,8 @@ void	t3_render_loop(t_system *system)
 }
 
 // stdoutはどちらもターミナルになっている必要がある。
-void	t3_check_terminal()
+// (まともな出力と、stdinをターミナルに向け直すために必要)
+void	t3_check_tty_out()
 {
 	if (isatty(STDOUT_FILENO) == 1)
 		return ;
@@ -111,7 +112,7 @@ void	t3_check_terminal()
 	exit(1);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	t_system	system;
 
@@ -119,7 +120,7 @@ int main(int argc, char **argv)
 	{
 		exit(1);
 	}
-	t3_check_terminal();
+	t3_check_tty_out();
 	bzero(&system, sizeof(t_system));
 	if (argc == 1)
 	{
@@ -127,7 +128,7 @@ int main(int argc, char **argv)
 		system.n_glyphs = t3_read_glyph(system.glyphs);
 		printf("input a string you wanna spin:\n");
 		t3_scan_message(&system);
-		t3_rebind_stdin();
+		t3_stdin_to_tty();
 	}
 	else
 	{

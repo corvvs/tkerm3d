@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:58:31 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/19 02:07:04 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/19 10:57:39 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,7 @@ int		t3_get_key(void);
 void	t3_update_by_key(t_system *system);
 
 size_t	t3_read_glyph(t_glyph *glyphs);
-int		t3_rebind_stdin();
+int		t3_stdin_to_tty();
 bool	t3_scan_message(t_system *sys);
 
 t_ut	t3_get_ut(void);

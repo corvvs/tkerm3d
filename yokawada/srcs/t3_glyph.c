@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 22:01:55 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/19 00:25:51 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/19 10:57:39 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ size_t	t3_read_glyph(t_glyph *glyphs)
 }
 
 // STDIN_FILENO を /dev/tty/stdin に割り当て直す
-int	t3_rebind_stdin()
+int	t3_stdin_to_tty()
 {
 	close(STDIN_FILENO);
 	return (dup2(STDOUT_FILENO, STDIN_FILENO));
@@ -160,16 +160,9 @@ int	t3_rebind_stdin()
 bool	t3_scan_message(t_system *sys)
 {
 	ssize_t	read_len;
-	// struct termios	oldt;
-	// struct termios	newt;
 
 	bzero(sys->message, sizeof(char) * (T3_MAX_MSGLEN + 1));
-	// tcgetattr(STDIN_FILENO, &oldt);
-	// newt = oldt;
-	// newt.c_lflag &= ~(ECHOE);
-	// tcsetattr(STDIN_FILENO, TCSANOW, &newt);
 	read_len = read(STDIN_FILENO, sys->message, T3_MAX_MSGLEN);
-	// tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 	
 	if (read_len >= 0)
 	{
