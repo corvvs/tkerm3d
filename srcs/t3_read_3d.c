@@ -70,23 +70,17 @@ t_vector3d	*t3_read_vectors_from_file(const char *file_path)
 
 	lines = t3_read_lines(file_path);
 	if (!lines)
-	{
 		return (NULL);
-	}
 	n = t3_count_lines(lines);
 	points = malloc(sizeof(t_vector3d) * (n + 1));
 	if (!points)
-	{
 		return (NULL);
-	}
 	points[n][0] = t3_nan();
 	i = 0;
 	while (i < n)
 	{
 		if (!t3_vectorize(lines[i], points[i]))
-		{
 			return (NULL);
-		}
 		i += 1;
 	}
 	return (points);
