@@ -177,7 +177,7 @@ void	t3_update_by_key(t_system *system)
 		return ;
 	if (strchr("eq", key))
 		t3_update_omega(system, key);
-	else if (strchr("sadw", key))
+	else if (strchr("wasd", key))
 		t3_update_offset(system, key);
 	else if (strchr("xz", key))
 		t3_update_flame(system, key);
