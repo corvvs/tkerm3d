@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:58:31 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/16 14:21:43 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/19 10:57:39 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,28 @@
 # include <string.h>
 # include <math.h>
 # include <termios.h>
+# include <ctype.h>
 # include "libft.h"
 # include <sys/time.h>
 # include <fcntl.h>
 # include <sys/select.h>
 # include <sys/ioctl.h>
 
-# define T3_WIDTH 160
-# define T3_HEIGHT 60
 # define T3_MAX_WIDTH 350
 # define T3_MAX_HEIGHT 100
+// グリフ総数
+# define T3_GLYPH_NUM 96
+// 1つのグリフの横幅(文字数)
+# define T3_GLYPH_WIDTH 20
+// 1つのグリフの縦幅(文字数)
+# define T3_GLYPH_HEIGHT 40
+# define T3_GLYPH_SCALE 0.1
+# define T3_MAX_MSGLEN 20
+// 画面クリア用エスケープシーケンス
+# define T3_ES_CLEAR "\x1b[H"
+// キー
+# define T3_CHAR_ESC 27
+
 typedef uint64_t	t_ut;
 
 // 3次元ベクトル構造体
@@ -36,6 +48,19 @@ typedef double	t_vector3d[3];
 // アフィン変換行列(4x4)
 // a[16]でもいい？
 typedef double	t_affine[4][4];
+
+// グリフ(字形)
+typedef struct s_glyph {
+	char		character;
+	size_t		n_points;
+	t_vector3d	*points;
+}	t_glyph;
+
+typedef enum e_source {
+	T3_SRC_DUMMY,
+	T3_SRC_TEXT,
+	T3_SRC_FILE_3D,
+}	t_source;
 
 // カメラパラメータ構造体
 typedef struct s_optics {
@@ -85,15 +110,32 @@ typedef struct s_system {
 	t_affine	transform_animated;
 
 	t_optics	optics;
-} t_system;
+
+	// 描画するものが何なのか
+	t_source	src_mode;
+	// グリフの数
+	size_t		n_glyphs;
+	// グリフのデータ
+	t_glyph		glyphs[T3_GLYPH_NUM];
+	// 任意入力メッセージ
+	char		message[T3_MAX_MSGLEN + 1];
+	// 現在のメッセージ長
+	size_t		len_message;
+
+	// ピクセルバッファのサイズ
+	size_t		n_pixelbuffer;
+	char		*pixelbuffer;
+}	t_system;
 
 char	*rd_read_file_content(const char *filename);
 
-bool	rd_is_finite(const double val);
-double	rd_nan(void);
+void	t3_init_render_params(t_system *system);
+
+bool	t3_is_fintie(const double val);
+double	t3_nan(void);
 size_t	t3_count_lines(char **lines);
 bool	t3_vectorize(const char *str, t_vector3d vector);
-t_vector3d	*t3_read_from_file(const char *file_path);
+t_vector3d	*t3_read_vectors_from_file(const char *file_path);
 void	rd_free_strarray(char ***pstrs);
 
 void	t3_affine_identity(t_affine a);
@@ -108,6 +150,26 @@ t_ut	t3_get_ut(void);
 t_ut	t3_wait_until(t_ut this_time);
 void	t3_clear_pixelbuffer(t_system *system);
 void	t3_fill_pixelbuffer(t_system *system);
-void	t3_render_pixel_buffer(t_system *system);
+void	t3_render(t_system *system);
+
+bool	t3_scan_message(t_system *system);
+void	t3_repoint(t_system *system);
+void	t3_centralize_points(size_t n, t_vector3d *points);
+int		t3_get_key(void);
+void	t3_update_by_key(t_system *system);
+
+size_t	t3_read_glyph(t_glyph *glyphs);
+int		t3_stdin_to_tty();
+bool	t3_scan_message(t_system *sys);
+
+t_ut	t3_get_ut(void);
+t_ut	t3_wait_until(t_ut this_time);
+
+bool	t3_is_fintie(const double val);
+double	t3_nan(void);
+bool	t3_vectorize(const char *str, t_vector3d vector);
+
+int		t3_max(int a, int b);
+int		t3_min(int a, int b);
 
 #endif

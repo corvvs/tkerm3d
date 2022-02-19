@@ -1,30 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rd_file.h                                          :+:      :+:    :+:   */
+/*   t3_math.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/01 11:37:12 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/18 00:04:52 by corvvs           ###   ########.fr       */
+/*   Created: 2022/02/19 01:56:47 by corvvs            #+#    #+#             */
+/*   Updated: 2022/02/19 01:57:27 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef RD_FILE_H
-# define RD_FILE_H
+#include "term3d.h"
 
-# include <unistd.h>
-# include <fcntl.h>
-# include <stdbool.h>
-# include <stdio.h>
-# include "libft.h"
-# define FT_BUFSIZ 4096
-
-typedef struct s_plastic_buffer
+int	t3_max(int a, int b)
 {
-	char	*body;
-	size_t	cap;
-	size_t	used;
-}	t_plastic_buffer;
+	if (a < b)
+		return (b);
+	return (a);
+}
 
-#endif
+int	t3_min(int a, int b)
+{
+	if (a < b)
+		return (a);
+	return (b);
+}
