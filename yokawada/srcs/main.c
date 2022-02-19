@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:57:24 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/19 10:57:39 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/19 11:06:28 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,6 @@ int	main(int argc, char **argv)
 	{
 		system.src_mode = T3_SRC_TEXT;
 		system.n_glyphs = t3_read_glyph(system.glyphs);
-		printf("input a string you wanna spin:\n");
 		t3_scan_message(&system);
 		t3_stdin_to_tty();
 	}

@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 10:37:24 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/19 02:29:47 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/19 11:10:31 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	t3_update_by_key(t_system *system)
 	}
 	else if (key == 's' || key == 'w')
 	{
-		system->optics.offset_y += ((key == 'w') * 2 - 1) * 0.1;
+		system->optics.offset_y += ((key == 's') * 2 - 1) * 0.1;
 		dprintf(STDERR_FILENO, "offset.y -> %f\n", system->optics.offset_x);
 	}
 	else if (key == 'x' || key == 'z')
@@ -145,7 +145,6 @@ void	t3_update_by_key(t_system *system)
 	}
 	else if (key == T3_CHAR_ESC && system->src_mode == T3_SRC_TEXT)
 	{
-		dprintf(STDERR_FILENO, "key is ESC -> go line mode\n");
 		t3_scan_message(system);
 	}
 	else

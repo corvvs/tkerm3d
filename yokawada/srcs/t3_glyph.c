@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 22:01:55 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/19 10:57:39 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/19 11:06:41 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,6 +161,7 @@ bool	t3_scan_message(t_system *sys)
 {
 	ssize_t	read_len;
 
+	dprintf(STDERR_FILENO, "input a string you wanna spin:\n");
 	bzero(sys->message, sizeof(char) * (T3_MAX_MSGLEN + 1));
 	read_len = read(STDIN_FILENO, sys->message, T3_MAX_MSGLEN);
 	
