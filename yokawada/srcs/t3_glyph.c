@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 22:01:55 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/19 11:06:41 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/19 18:16:32 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,12 @@ void	t3_str_to_points(t_system *system, const char *str)
 size_t	t3_read_glyph(t_glyph *glyphs)
 {
 	char	*content = rd_read_file_content("./printables.txt");
+	if (!content)
+		return (0);
 	char	**lines = ft_split(content, '\n');
+	free(content);
+	if (!lines)
+		return (0);
 	size_t	g = 0;
 	size_t	i = 0;
 	size_t	i0 = i;
@@ -147,6 +152,7 @@ size_t	t3_read_glyph(t_glyph *glyphs)
 		if (g == T3_GLYPH_NUM)
 			break ;
 	}
+	rd_free_strarray(&lines);
 	return (g);
 }
 
