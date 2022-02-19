@@ -46,6 +46,7 @@ void	t3_str_to_points(t_system *system, const char *str)
 	size_t	i;
 	size_t	l;
 	size_t	n;
+	size_t	j;
 	size_t	n_points;
 
 	if (system->points_original)
@@ -73,13 +74,16 @@ void	t3_str_to_points(t_system *system, const char *str)
 		if (isprint(str[i]))
 		{
 			memcpy(system->points_original + n_points,
-				system->glyphs[str[i] - ' '].points, sizeof(t_vector3d) * system->glyphs[str[i] - ' '].n_points
+				system->glyphs[str[i] - ' '].points,
+				sizeof(t_vector3d) * system->glyphs[str[i] - ' '].n_points
 				);
-			size_t	j = 0;
+			j = 0;
 			while (j < system->glyphs[str[i] - ' '].n_points)
 			{
-				system->points_original[n_points + j][0] += T3_GLYPH_SCALE * T3_GLYPH_WIDTH * n;
-				system->points_original[n_points + j][1] -= T3_GLYPH_SCALE * T3_GLYPH_HEIGHT * l;
+				system->points_original[n_points + j][0]
+					+= T3_GLYPH_SCALE * T3_GLYPH_WIDTH * n;
+				system->points_original[n_points + j][1]
+					-= T3_GLYPH_SCALE * T3_GLYPH_HEIGHT * l;
 				j += 1;
 			}
 			n_points += system->glyphs[str[i] - ' '].n_points;
@@ -99,27 +103,35 @@ void	t3_str_to_points(t_system *system, const char *str)
 // 読み取れたグリフの数を返す(最大でT3_GLYPH_NUM)。
 size_t	t3_read_glyph(t_glyph *glyphs)
 {
-	char	*content = rd_read_file_content("./printables.txt");
+	char	*content;
+	size_t	k;
+	size_t	j;
+	size_t	dots;
+	char	**lines;
+	size_t	g;
+	size_t	i;
+	size_t	i0;
+
+	content = rd_read_file_content("./printables.txt");
 	if (!content)
 		return (0);
-	char	**lines = ft_split(content, '\n');
+	lines = ft_split(content, '\n');
 	free(content);
 	if (!lines)
 		return (0);
-	size_t	g = 0;
-	size_t	i = 0;
-	size_t	i0 = i;
-
+	g = 0;
+	i = 0;
+	i0 = i;
 	while (lines[i])
 	{
 		i += 1;
 		if (i % T3_GLYPH_HEIGHT != 0)
 			continue ;
-		size_t	j = i0;
-		size_t	dots = 0;
+		j = i0;
+		dots = 0;
 		while (j < i)
 		{
-			size_t	k = 0;
+			k = 0;
 			while (lines[j][k])
 			{
 				dots += lines[j][k] == '#';
@@ -133,7 +145,7 @@ size_t	t3_read_glyph(t_glyph *glyphs)
 		dots = 0;
 		while (j < i)
 		{
-			size_t	k = 0;
+			k = 0;
 			while (lines[j][k])
 			{
 				if (lines[j][k] == '#')
@@ -157,7 +169,7 @@ size_t	t3_read_glyph(t_glyph *glyphs)
 }
 
 // STDIN_FILENO を /dev/tty/stdin に割り当て直す
-int	t3_stdin_to_tty()
+int	t3_stdin_to_tty(void)
 {
 	close(STDIN_FILENO);
 	return (dup2(STDOUT_FILENO, STDIN_FILENO));
@@ -170,7 +182,6 @@ bool	t3_scan_message(t_system *sys)
 	dprintf(STDERR_FILENO, "input a string you wanna spin:\n");
 	bzero(sys->message, sizeof(char) * (T3_MAX_MSGLEN + 1));
 	read_len = read(STDIN_FILENO, sys->message, T3_MAX_MSGLEN);
-	
 	if (read_len >= 0)
 	{
 		eval_string(sys->message);

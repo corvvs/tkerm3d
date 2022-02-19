@@ -60,7 +60,6 @@ char	**t3_read_lines(const char *file_path)
 	return (lines);
 }
 
-
 // file_path の中身を1つの文字列として読み取る
 t_vector3d	*t3_read_vectors_from_file(const char *file_path)
 {
