@@ -51,7 +51,6 @@ typedef double		t_affine[4][4];
 
 // グリフ(字形)
 typedef struct s_glyph {
-	char		character;
 	size_t		n_points;
 	t_vector3d	*points;
 }	t_glyph;
