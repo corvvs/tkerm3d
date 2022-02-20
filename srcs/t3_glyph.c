@@ -151,6 +151,15 @@ int	t3_stdin_to_tty(void)
 	return (dup2(STDOUT_FILENO, STDIN_FILENO));
 }
 
+void	t3_clear_original_points(t_system *system)
+{
+	if (system->points_original)
+	{
+		free(system->points_original);
+		system->points_original = NULL;
+	}
+}
+
 bool	t3_is_objectable(const char c, size_t n_glyphs)
 {
 	if (' ' <= c && (size_t)c < ' ' + n_glyphs)
@@ -158,11 +167,12 @@ bool	t3_is_objectable(const char c, size_t n_glyphs)
 	return false;
 }
 
-size_t	t3_count_str_total_points(const char *str, t_system *system)
+void	t3_allocate_points(const char *str, t_system *system)
 {
 	size_t	i;
 	size_t	n_points;
 
+	t3_clear_original_points(system);
 	i = 0;
 	n_points = 0;
 	while (str[i])
@@ -171,7 +181,8 @@ size_t	t3_count_str_total_points(const char *str, t_system *system)
 			n_points += system->glyphs[str[i] - ' '].n_points;
 		i += 1;
 	}
-	return n_points;
+	system->n_points = n_points;
+	system->points_original = malloc(sizeof(t_vector3d) * (n_points + 1));
 }
 
 void	t3_str_to_points(t_system *system, const char *str)
@@ -182,14 +193,7 @@ void	t3_str_to_points(t_system *system, const char *str)
 	size_t	j;
 	size_t	n_points;
 
-	if (system->points_original)
-	{
-		free(system->points_original);
-		system->points_original = NULL;
-	}
-	n_points = t3_count_str_total_points(str, system);
-	system->n_points = n_points;
-	system->points_original = malloc(sizeof(t_vector3d) * (n_points + 1));
+	t3_allocate_points(str, system);
 	n_points = 0;
 	i = 0;
 	n = 0;
