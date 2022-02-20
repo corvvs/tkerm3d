@@ -151,6 +151,29 @@ int	t3_stdin_to_tty(void)
 	return (dup2(STDOUT_FILENO, STDIN_FILENO));
 }
 
+bool	t3_is_objectable(const char c, size_t n_glyphs)
+{
+	if (' ' <= c && (size_t)c < ' ' + n_glyphs)
+		return true;
+	return false;
+}
+
+size_t	t3_count_str_total_points(const char *str, t_system *system)
+{
+	size_t	i;
+	size_t	n_points;
+
+	i = 0;
+	n_points = 0;
+	while (str[i])
+	{
+		if (t3_is_objectable(str[i], system->n_glyphs))
+			n_points += system->glyphs[str[i] - ' '].n_points;
+		i += 1;
+	}
+	return n_points;
+}
+
 void	t3_str_to_points(t_system *system, const char *str)
 {
 	size_t	i;
@@ -164,21 +187,13 @@ void	t3_str_to_points(t_system *system, const char *str)
 		free(system->points_original);
 		system->points_original = NULL;
 	}
-	n_points = 0;
-	i = 0;
-	n = 0;
-	l = 0;
-	while (str[i])
-	{
-		if (' ' <= str[i] && (size_t)str[i] < ' ' + system->n_glyphs)
-			n_points += system->glyphs[str[i] - ' '].n_points;
-		i += 1;
-	}
+	n_points = t3_count_str_total_points(str, system);
 	system->n_points = n_points;
 	system->points_original = malloc(sizeof(t_vector3d) * (n_points + 1));
 	n_points = 0;
 	i = 0;
 	n = 0;
+	l = 0;
 	while (str[i])
 	{
 		if (isprint(str[i]))
