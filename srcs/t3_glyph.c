@@ -41,69 +41,23 @@ void	eval_string(char *str)
 		str[k++] = '\0';
 }
 
-void	t3_str_to_points(t_system *system, const char *str)
+char **t3_glyph_array(const char *filename)
 {
-	size_t	i;
-	size_t	l;
-	size_t	n;
-	size_t	j;
-	size_t	n_points;
+	char	*content;
+	char	**lines;
 
-	if (system->points_original)
-	{
-		free(system->points_original);
-		system->points_original = NULL;
-	}
-	n_points = 0;
-	i = 0;
-	n = 0;
-	l = 0;
-	while (str[i])
-	{
-		if (' ' <= str[i] && (size_t)str[i] < ' ' + system->n_glyphs)
-			n_points += system->glyphs[str[i] - ' '].n_points;
-		i += 1;
-	}
-	system->n_points = n_points;
-	system->points_original = malloc(sizeof(t_vector3d) * (n_points + 1));
-	n_points = 0;
-	i = 0;
-	n = 0;
-	while (str[i])
-	{
-		if (isprint(str[i]))
-		{
-			memcpy(system->points_original + n_points,
-				system->glyphs[str[i] - ' '].points,
-				sizeof(t_vector3d) * system->glyphs[str[i] - ' '].n_points
-				);
-			j = 0;
-			while (j < system->glyphs[str[i] - ' '].n_points)
-			{
-				system->points_original[n_points + j][0]
-					+= T3_GLYPH_SCALE * T3_GLYPH_WIDTH * n;
-				system->points_original[n_points + j][1]
-					-= T3_GLYPH_SCALE * T3_GLYPH_HEIGHT * l;
-				j += 1;
-			}
-			n_points += system->glyphs[str[i] - ' '].n_points;
-			n += 1;
-		}
-		else if (str[i] == '\n')
-		{
-			n = 0;
-			l += 1;
-		}
-		i += 1;
-	}
-	t3_centralize_points(system->n_points, system->points_original);
+	content = rd_read_file_content(filename);
+	if (!content)
+		return (NULL);
+	lines = ft_split(content, '\n');
+	free(content);
+	return lines;
 }
 
 // グリフファイルからグリフを読み取り、t_glyph配列に格納する。
 // 読み取れたグリフの数を返す(最大でT3_GLYPH_NUM)。
 size_t	t3_read_glyph(t_glyph *glyphs)
 {
-	char	*content;
 	size_t	k;
 	size_t	j;
 	size_t	dots;
@@ -112,11 +66,7 @@ size_t	t3_read_glyph(t_glyph *glyphs)
 	size_t	i;
 	size_t	i0;
 
-	content = rd_read_file_content("./printables.txt");
-	if (!content)
-		return (0);
-	lines = ft_split(content, '\n');
-	free(content);
+	lines = t3_glyph_array("./printables.txt");
 	if (!lines)
 		return (0);
 	g = 0;
@@ -173,6 +123,64 @@ int	t3_stdin_to_tty(void)
 {
 	close(STDIN_FILENO);
 	return (dup2(STDOUT_FILENO, STDIN_FILENO));
+}
+
+void	t3_str_to_points(t_system *system, const char *str)
+{
+	size_t	i;
+	size_t	l;
+	size_t	n;
+	size_t	j;
+	size_t	n_points;
+
+	if (system->points_original)
+	{
+		free(system->points_original);
+		system->points_original = NULL;
+	}
+	n_points = 0;
+	i = 0;
+	n = 0;
+	l = 0;
+	while (str[i])
+	{
+		if (' ' <= str[i] && (size_t)str[i] < ' ' + system->n_glyphs)
+			n_points += system->glyphs[str[i] - ' '].n_points;
+		i += 1;
+	}
+	system->n_points = n_points;
+	system->points_original = malloc(sizeof(t_vector3d) * (n_points + 1));
+	n_points = 0;
+	i = 0;
+	n = 0;
+	while (str[i])
+	{
+		if (isprint(str[i]))
+		{
+			memcpy(system->points_original + n_points,
+				system->glyphs[str[i] - ' '].points,
+				sizeof(t_vector3d) * system->glyphs[str[i] - ' '].n_points
+				);
+			j = 0;
+			while (j < system->glyphs[str[i] - ' '].n_points)
+			{
+				system->points_original[n_points + j][0]
+					+= T3_GLYPH_SCALE * T3_GLYPH_WIDTH * n;
+				system->points_original[n_points + j][1]
+					-= T3_GLYPH_SCALE * T3_GLYPH_HEIGHT * l;
+				j += 1;
+			}
+			n_points += system->glyphs[str[i] - ' '].n_points;
+			n += 1;
+		}
+		else if (str[i] == '\n')
+		{
+			n = 0;
+			l += 1;
+		}
+		i += 1;
+	}
+	t3_centralize_points(system->n_points, system->points_original);
 }
 
 bool	t3_scan_message(t_system *sys)
