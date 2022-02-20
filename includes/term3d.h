@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:58:31 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/19 10:57:39 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/20 17:11:14 by tkomatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@
 typedef uint64_t	t_ut;
 
 // 文字列におけるカーソルの位置
-typedef size_t	t_position[2];
+typedef size_t		t_position[2];
 
 // 3次元ベクトル構造体
 typedef double		t_vector3d[3];
