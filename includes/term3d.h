@@ -42,6 +42,9 @@
 
 typedef uint64_t	t_ut;
 
+// 文字列におけるカーソルの位置
+typedef size_t	t_position[2];
+
 // 3次元ベクトル構造体
 typedef double		t_vector3d[3];
 
