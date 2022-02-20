@@ -66,7 +66,7 @@ DEPENDS = $(OBJS:.o=.d)
 # Recipe
 # ****************************************************************************
 
-all: $(LIBFT) $(NAME)
+all: $(NAME)
 
 # C program
 $(NAME): $(OBJS)
