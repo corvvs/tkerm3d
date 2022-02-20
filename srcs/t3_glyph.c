@@ -75,6 +75,21 @@ size_t t3_count_glyph_dots(char **lines, size_t start, size_t end)
 	return dots;
 }
 
+size_t	t3_next_glyph(char **lines, size_t index)
+{
+	size_t	i;
+
+	i = index;
+	// 次のグリフの開始インデックスまでスキップする
+	while (lines[i])
+	{
+		i += 1;
+		if (i % T3_GLYPH_HEIGHT == 0)
+			break ;
+	}
+	return i;
+}
+
 // グリフファイルからグリフを読み取り、t_glyph配列に格納する。
 // 読み取れたグリフの数を返す(最大でT3_GLYPH_NUM)。
 size_t	t3_read_glyph(t_glyph *glyphs)
@@ -95,13 +110,7 @@ size_t	t3_read_glyph(t_glyph *glyphs)
 	i0 = i;
 	while (g != T3_GLYPH_NUM)
 	{
-		// 次のグリフの開始インデックスまでスキップする
-		while (lines[i])
-		{
-			i += 1;
-			if (i % T3_GLYPH_HEIGHT == 0)
-				break ;
-		}
+		i = t3_next_glyph(lines, i);
 
 		// glyphsに点群を設定する
 		glyphs[g].n_points = t3_count_glyph_dots(lines, i0, i);
