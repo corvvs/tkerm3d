@@ -41,7 +41,7 @@ void	eval_string(char *str)
 		str[k++] = '\0';
 }
 
-char **t3_glyph_array(const char *filename)
+char	**t3_glyph_array(const char *filename)
 {
 	char	*content;
 	char	**lines;
@@ -51,14 +51,14 @@ char **t3_glyph_array(const char *filename)
 		return (NULL);
 	lines = ft_split(content, '\n');
 	free(content);
-	return lines;
+	return (lines);
 }
 
-size_t t3_count_glyph_dots(char **lines, size_t start, size_t end)
+size_t	t3_count_glyph_dots(char **lines, size_t start, size_t end)
 {
-	size_t row_index;
-	size_t col_index;
-	size_t dots;
+	size_t	row_index;
+	size_t	col_index;
+	size_t	dots;
 
 	row_index = start;
 	dots = 0;
@@ -72,7 +72,7 @@ size_t t3_count_glyph_dots(char **lines, size_t start, size_t end)
 		}
 		row_index += 1;
 	}
-	return dots;
+	return (dots);
 }
 
 size_t	t3_next_glyph(char **lines, size_t index)
@@ -80,14 +80,42 @@ size_t	t3_next_glyph(char **lines, size_t index)
 	size_t	i;
 
 	i = index;
-	// 次のグリフの開始インデックスまでスキップする
 	while (lines[i])
 	{
 		i += 1;
 		if (i % T3_GLYPH_HEIGHT == 0)
 			break ;
 	}
-	return i;
+	return (i);
+}
+
+void	t3_read_glyph_dots(t_glyph *glyph,
+			char **lines, size_t start, size_t end)
+{
+	size_t	row_index;
+	size_t	col_index;
+	size_t	dots;
+
+	glyph->n_points = t3_count_glyph_dots(lines, start, end);
+	glyph->points = malloc(sizeof(t_vector3d) * glyph->n_points);
+	row_index = start;
+	dots = 0;
+	while (row_index < end)
+	{
+		col_index = 0;
+		while (lines[row_index][col_index])
+		{
+			if (lines[row_index][col_index] == '#')
+			{
+				glyph->points[dots][0] = col_index * T3_GLYPH_SCALE;
+				glyph->points[dots][1] = (end - row_index) * T3_GLYPH_SCALE;
+				glyph->points[dots][2] = 0;
+				dots += 1;
+			}
+			col_index += 1;
+		}
+		row_index += 1;
+	}
 }
 
 // グリフファイルからグリフを読み取り、t_glyph配列に格納する。
@@ -95,45 +123,21 @@ size_t	t3_next_glyph(char **lines, size_t index)
 size_t	t3_read_glyph(t_glyph *glyphs)
 {
 	char	**lines;
-	size_t	k;
-	size_t	j;
-	size_t	dots;
-	size_t	g;   // グリフのインデックス
-	size_t	i;   // linesのインデックス
-	size_t	i0;  // linesにおけるグリフのインデックス
+	size_t	g;
+	size_t	next_glyph;
+	size_t	curr_glyph;
 
 	lines = t3_glyph_array("./printables.txt");
 	if (!lines)
 		return (0);
 	g = 0;
-	i = 0;
-	i0 = i;
+	next_glyph = 0;
+	curr_glyph = 0;
 	while (g != T3_GLYPH_NUM)
 	{
-		i = t3_next_glyph(lines, i);
-
-		// glyphsに点群を設定する
-		glyphs[g].n_points = t3_count_glyph_dots(lines, i0, i);
-		glyphs[g].points = malloc(sizeof(t_vector3d) * glyphs[g].n_points);
-		j = i0;
-		dots = 0;
-		while (j < i)
-		{
-			k = 0;
-			while (lines[j][k])
-			{
-				if (lines[j][k] == '#')
-				{
-					glyphs[g].points[dots][0] = k * T3_GLYPH_SCALE;
-					glyphs[g].points[dots][1] = (i - j) * T3_GLYPH_SCALE;
-					glyphs[g].points[dots][2] = 0;
-					dots += 1;
-				}
-				k += 1;
-			}
-			j += 1;
-		}
-		i0 = i;
+		next_glyph = t3_next_glyph(lines, next_glyph);
+		t3_read_glyph_dots(&glyphs[g], lines, curr_glyph, next_glyph);
+		curr_glyph = next_glyph;
 		g += 1;
 	}
 	rd_free_strarray(&lines);
