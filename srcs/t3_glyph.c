@@ -93,12 +93,15 @@ size_t	t3_read_glyph(t_glyph *glyphs)
 	g = 0;
 	i = 0;
 	i0 = i;
-	while (lines[i])
+	while (g != T3_GLYPH_NUM)
 	{
 		// 次のグリフの開始インデックスまでスキップする
-		i += 1;
-		if (i % T3_GLYPH_HEIGHT != 0)
-			continue ;
+		while (lines[i])
+		{
+			i += 1;
+			if (i % T3_GLYPH_HEIGHT == 0)
+				break ;
+		}
 
 		// glyphsに点群を設定する
 		glyphs[g].n_points = t3_count_glyph_dots(lines, i0, i);
@@ -123,10 +126,6 @@ size_t	t3_read_glyph(t_glyph *glyphs)
 		}
 		i0 = i;
 		g += 1;
-
-		// 全てのグリフの読み取りが完了したら終了
-		if (g == T3_GLYPH_NUM)
-			break ;
 	}
 	rd_free_strarray(&lines);
 	return (g);
