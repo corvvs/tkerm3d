@@ -163,8 +163,8 @@ void	t3_clear_original_points(t_system *system)
 bool	t3_is_objectable(const char c, size_t n_glyphs)
 {
 	if (' ' <= c && (size_t)c < ' ' + n_glyphs)
-		return true;
-	return false;
+		return (true);
+	return (false);
 }
 
 void	t3_allocate_points(const char *str, t_system *system)
@@ -185,12 +185,32 @@ void	t3_allocate_points(const char *str, t_system *system)
 	system->points_original = malloc(sizeof(t_vector3d) * (n_points + 1));
 }
 
+size_t	t3_place_character(t_system *system, const char c, size_t n_points, size_t n, size_t l)
+{
+	size_t	j;
+
+	memcpy(system->points_original + n_points,
+		system->glyphs[c - ' '].points,
+		sizeof(t_vector3d) * system->glyphs[c - ' '].n_points
+		);
+	j = 0;
+	while (j < system->glyphs[c - ' '].n_points)
+	{
+		system->points_original[n_points + j][0]
+			+= T3_GLYPH_SCALE * T3_GLYPH_WIDTH * n;
+		system->points_original[n_points + j][1]
+			-= T3_GLYPH_SCALE * T3_GLYPH_HEIGHT * l;
+		j += 1;
+	}
+	n_points += system->glyphs[c - ' '].n_points;
+	return (n_points);
+}
+
 void	t3_str_to_points(t_system *system, const char *str)
 {
 	size_t	i;
 	size_t	l;
 	size_t	n;
-	size_t	j;
 	size_t	n_points;
 
 	t3_allocate_points(str, system);
@@ -202,20 +222,7 @@ void	t3_str_to_points(t_system *system, const char *str)
 	{
 		if (isprint(str[i]))
 		{
-			memcpy(system->points_original + n_points,
-				system->glyphs[str[i] - ' '].points,
-				sizeof(t_vector3d) * system->glyphs[str[i] - ' '].n_points
-				);
-			j = 0;
-			while (j < system->glyphs[str[i] - ' '].n_points)
-			{
-				system->points_original[n_points + j][0]
-					+= T3_GLYPH_SCALE * T3_GLYPH_WIDTH * n;
-				system->points_original[n_points + j][1]
-					-= T3_GLYPH_SCALE * T3_GLYPH_HEIGHT * l;
-				j += 1;
-			}
-			n_points += system->glyphs[str[i] - ' '].n_points;
+			n_points = t3_place_character(system, str[i], n_points, n, l);
 			n += 1;
 		}
 		else if (str[i] == '\n')
