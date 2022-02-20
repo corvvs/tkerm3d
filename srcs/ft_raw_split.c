@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "term3d.h"
 
 static void	*ft_all_free(char **split_strs, size_t i)
 {
@@ -30,7 +30,7 @@ static char	*ft_memdup(char const *s, size_t n)
 	dest = (char *)malloc(sizeof(char) * (n + 1));
 	if (dest == NULL)
 		return (NULL);
-	ft_memcpy(dest, s, n);
+	memcpy(dest, s, n);
 	dest[n] = '\0';
 	return (dest);
 }

@@ -19,11 +19,11 @@
 # include <math.h>
 # include <termios.h>
 # include <ctype.h>
-# include "libft.h"
 # include <sys/time.h>
 # include <fcntl.h>
 # include <sys/select.h>
 # include <sys/ioctl.h>
+# include <stdbool.h>
 
 # define T3_MAX_WIDTH 350
 # define T3_MAX_HEIGHT 100
@@ -128,6 +128,9 @@ typedef struct s_system {
 	size_t		n_pixelbuffer;
 	char		*pixelbuffer;
 }	t_system;
+
+char		**ft_rawsplit(char const *s, char c);
+char		**ft_split(char const *s, char c);
 
 char		*rd_read_file_content(const char *filename);
 

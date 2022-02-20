@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "term3d.h"
 
 static void	*ft_all_free(char **split_strs, size_t i)
 {

@@ -18,7 +18,7 @@
 # include <stdbool.h>
 # include <stdio.h>
 # include <string.h>
-# include "libft.h"
+# include <stdlib.h>
 # define FT_BUFSIZ 4096
 
 typedef struct s_plastic_buffer

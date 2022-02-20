@@ -23,7 +23,7 @@ VPATH = $(SRC_DIR):$(SRC_DIR)utils
 
 SHELL = /bin/bash
 CC = gcc
-INCLUDE = -I includes -I libft
+INCLUDE = -I includes
 RM = rm -fr
 
 BASEFLAGS = -Wall -Werror -Wextra -MMD -MP
@@ -38,24 +38,21 @@ OBJS = $(addprefix $(OBJ_DIR), $(SRCS:.c=.o))
 
 DEPENDS = $(OBJS:.o=.d)
 
-LIBFT_DIR	:= libft
-LIBFT		:= libft.a
-
 # Recipe
 # ****************************************************************************
 
 all: $(LIBFT) $(NAME)
 
 # C program
-$(NAME): $(OBJS) $(LIBFT)
+$(NAME): $(OBJS)
 	@printf "$(_END)\nCompiled source files\n"
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFLAGS) -o $@ $(LIBFT)
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBFLAGS) -o $@ $(LIBFT)
 	@printf "$(_GREEN)Finish compiling $(NAME)!\n"
 	@printf "Try \"./$(NAME)\" to use$(_END)\n"
 
 $(OBJ_DIR)%.o: %.c
 	@if [ ! -d $(OBJ_DIR) ];then mkdir $(OBJ_DIR); fi
-	$(CC) $(CFLAGS) -c $< -o $@ 
+	@$(CC) $(CFLAGS) -c $< -o $@
 	@printf "$(_GREEN)█$(_END)"
 
 clean:
@@ -69,10 +66,6 @@ fclean:
 	@$(RM) *.dSYM
 
 re: fclean all
-
-$(LIBFT):
-	make -C $(LIBFT_DIR)
-	cp $(LIBFT_DIR)/$(LIBFT) .
 
 debug: CFLAGS += -fsanitize=address $(DEBUG_FLAGS)
 debug: re
@@ -88,4 +81,3 @@ test: all
 -include $(DEPENDS)
 
 PHONY: all clean fclean re debug leak test
-
