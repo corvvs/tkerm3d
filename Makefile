@@ -33,8 +33,33 @@ DEBUG_FLAGS = -g3
 # Source files
 # ****************************************************************************
 
-SRCS = $(shell find $(SRC_DIR) -name '*.c' | xargs basename -a)
-OBJS = $(addprefix $(OBJ_DIR), $(SRCS:.c=.o))
+FILES = ft_raw_split.c \
+        ft_split.c \
+        main.c \
+        rd_file.c \
+        t3_affine.c \
+        t3_affine_compose.c \
+        t3_double.c \
+        t3_glyph.c \
+        t3_glyph_allocate.c \
+        t3_loop.c \
+        t3_math.c \
+        t3_read_3d.c \
+        t3_render.c \
+        t3_reset_params.c \
+        t3_scan_message.c \
+        t3_setup.c \
+        t3_timing.c \
+        t3_ui.c \
+        t3_update_animate.c \
+        t3_update_axis.c \
+        t3_update_flame.c \
+        t3_update_offset.c \
+        t3_update_omega.c \
+        t3_update_scale.c
+
+SRCS = $(addprefix $(SRC_DIR), $(FILES))
+OBJS = $(addprefix $(OBJ_DIR), $(FILES:.c=.o))
 
 DEPENDS = $(OBJS:.o=.d)
 
