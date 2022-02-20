@@ -131,6 +131,11 @@ typedef struct s_system {
 
 char		*rd_read_file_content(const char *filename);
 
+void		t3_setup_system(t_system *system);
+void		t3_check_tty_out(void);
+
+void		t3_render_loop(t_system *system);
+
 void		t3_init_render_params(t_system *system);
 
 bool		t3_is_fintie(const double val);
@@ -160,12 +165,22 @@ void		t3_affine_rot_axis(
 				);
 void		t3_apply_transform(t_vector3d v2, const t_vector3d v1, t_affine a);
 void		t3_rot_vector_around_axis(t_vector3d r, t_vector3d n, double phi);
+void		t3_affine_compose(
+				t_affine dest, const t_affine src1, const t_affine src2);
 
 t_ut		t3_get_ut(void);
 t_ut		t3_wait_until(t_ut this_time);
 void		t3_clear_pixelbuffer(t_system *system);
 void		t3_fill_pixelbuffer(t_system *system);
 void		t3_render(t_system *system);
+
+void		t3_update_omega(t_system *system, int key);
+void		t3_update_offset(t_system *system, int key);
+void		t3_update_flame(t_system *system, int key);
+void		t3_update_scale(t_system *system, int key);
+void		t3_udpate_axis(t_system *system, int key);
+void		t3_update_animate(t_system *system);
+void		t3_reset_params(t_system *system);
 
 bool		t3_scan_message(t_system *system);
 void		t3_repoint(t_system *system);
@@ -176,6 +191,7 @@ void		t3_update_by_key(t_system *system);
 size_t		t3_read_glyph(t_glyph *glyphs);
 int			t3_stdin_to_tty(void);
 bool		t3_scan_message(t_system *sys);
+void		t3_allocate_points(const char *str, t_system *system);
 
 t_ut		t3_get_ut(void);
 t_ut		t3_wait_until(t_ut this_time);
