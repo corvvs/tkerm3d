@@ -54,17 +54,38 @@ char **t3_glyph_array(const char *filename)
 	return lines;
 }
 
+size_t t3_count_glyph_dots(char **lines, size_t start, size_t end)
+{
+	size_t row_index;
+	size_t col_index;
+	size_t dots;
+
+	row_index = start;
+	dots = 0;
+	while (row_index < end)
+	{
+		col_index = 0;
+		while (lines[row_index][col_index])
+		{
+			dots += lines[row_index][col_index] == '#';
+			col_index += 1;
+		}
+		row_index += 1;
+	}
+	return dots;
+}
+
 // グリフファイルからグリフを読み取り、t_glyph配列に格納する。
 // 読み取れたグリフの数を返す(最大でT3_GLYPH_NUM)。
 size_t	t3_read_glyph(t_glyph *glyphs)
 {
+	char	**lines;
 	size_t	k;
 	size_t	j;
 	size_t	dots;
-	char	**lines;
-	size_t	g;
-	size_t	i;
-	size_t	i0;
+	size_t	g;   // グリフのインデックス
+	size_t	i;   // linesのインデックス
+	size_t	i0;  // linesにおけるグリフのインデックス
 
 	lines = t3_glyph_array("./printables.txt");
 	if (!lines)
@@ -74,23 +95,14 @@ size_t	t3_read_glyph(t_glyph *glyphs)
 	i0 = i;
 	while (lines[i])
 	{
+		// 次のグリフの開始インデックスまでスキップする
 		i += 1;
 		if (i % T3_GLYPH_HEIGHT != 0)
 			continue ;
-		j = i0;
-		dots = 0;
-		while (j < i)
-		{
-			k = 0;
-			while (lines[j][k])
-			{
-				dots += lines[j][k] == '#';
-				k += 1;
-			}
-			j += 1;
-		}
-		glyphs[g].n_points = dots;
-		glyphs[g].points = malloc(sizeof(t_vector3d) * dots);
+
+		// glyphsに点群を設定する
+		glyphs[g].n_points = t3_count_glyph_dots(lines, i0, i);
+		glyphs[g].points = malloc(sizeof(t_vector3d) * glyphs[g].n_points);
 		j = i0;
 		dots = 0;
 		while (j < i)
@@ -111,6 +123,8 @@ size_t	t3_read_glyph(t_glyph *glyphs)
 		}
 		i0 = i;
 		g += 1;
+
+		// 全てのグリフの読み取りが完了したら終了
 		if (g == T3_GLYPH_NUM)
 			break ;
 	}
