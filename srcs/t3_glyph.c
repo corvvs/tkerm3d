@@ -89,7 +89,7 @@ void	validate_glyph_file(char ***lines_ptr)
 		if (strlen(*lines) != T3_GLYPH_WIDTH)
 		{
 			t3_destroy_strarray(*lines_ptr);
-			dprintf(STDERR_FILENO, "Error: printable.txt: invalid file.\n");
+			dprintf(STDERR_FILENO, "Error: %s: invalid file.\n", T3_GLYPH_FILE);
 			exit(1);
 		}
 		lines += 1;
@@ -97,7 +97,7 @@ void	validate_glyph_file(char ***lines_ptr)
 	if (lines - *lines_ptr != T3_GLYPH_HEIGHT * T3_GLYPH_NUM)
 	{
 		t3_destroy_strarray(*lines_ptr);
-		dprintf(STDERR_FILENO, "Error: printable.txt: invalid file.\n");
+		dprintf(STDERR_FILENO, "Error: %s: invalid file.\n", T3_GLYPH_FILE);
 		exit(1);
 	}
 }
