@@ -79,6 +79,29 @@ static bool	convert_glyph_to_points(t_glyph *glyph,
 	return (true);
 }
 
+void	validate_glyph_file(char ***lines_ptr)
+{
+	char	**lines;
+
+	lines = *lines_ptr;
+	while (*lines)
+	{
+		if (strlen(*lines) != T3_GLYPH_WIDTH)
+		{
+			t3_destroy_strarray(*lines_ptr);
+			dprintf(STDERR_FILENO, "Error: printable.txt: invalid file.\n");
+			exit(1);
+		}
+		lines += 1;
+	}
+	if (lines - *lines_ptr != T3_GLYPH_HEIGHT * T3_GLYPH_NUM)
+	{
+		t3_destroy_strarray(*lines_ptr);
+		dprintf(STDERR_FILENO, "Error: printable.txt: invalid file.\n");
+		exit(1);
+	}
+}
+
 // グリフファイルからグリフを読み取り、t_glyph配列に格納する。
 // 読み取れたグリフの数を返す(最大でT3_GLYPH_NUM)。
 size_t	t3_read_glyphs(t_glyph *glyphs)
@@ -91,6 +114,7 @@ size_t	t3_read_glyphs(t_glyph *glyphs)
 	lines = t3_read_all_lines(T3_GLYPH_FILE);
 	if (!lines)
 		return (0);
+	validate_glyph_file(&lines);
 	i = 0;
 	next_start_line = 0;
 	curr_start_line = 0;
