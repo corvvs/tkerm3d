@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 22:01:55 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/21 15:22:44 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/21 21:13:21 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ static size_t	next_start_glyph_line(char **lines, size_t index)
 	return (i);
 }
 
+// グリフの '#' の部分のみを点群データに変換する
 static bool	convert_glyph_to_points(t_glyph *glyph,
 			char **lines, size_t start, size_t end)
 {
@@ -66,12 +67,9 @@ static bool	convert_glyph_to_points(t_glyph *glyph,
 		while (lines[row_index][col_index])
 		{
 			if (lines[row_index][col_index] == '#')
-			{
-				glyph->points[dots][0] = col_index * T3_GLYPH_SCALE;
-				glyph->points[dots][1] = (end - row_index) * T3_GLYPH_SCALE;
-				glyph->points[dots][2] = 0;
-				dots += 1;
-			}
+				memcpy(glyph->points[dots++], (t_vector3d){
+					col_index * T3_GLYPH_SCALE,
+					(end - row_index) * T3_GLYPH_SCALE, 0}, sizeof(t_vector3d));
 			col_index += 1;
 		}
 		row_index += 1;
@@ -123,12 +121,12 @@ size_t	t3_read_glyphs(t_glyph *glyphs)
 		next_start_line = next_start_glyph_line(lines, next_start_line);
 		if (curr_start_line == next_start_line)
 			break ;
-		convert_glyph_to_points(
-			&glyphs[i], lines, curr_start_line, next_start_line);
+		if (!convert_glyph_to_points(
+				&glyphs[i], lines, curr_start_line, next_start_line))
+			break ;
 		curr_start_line = next_start_line;
 		i += 1;
 	}
 	t3_destroy_strarray(lines);
-	dprintf(STDERR_FILENO, "i = %zu\n", i);
 	return (i);
 }

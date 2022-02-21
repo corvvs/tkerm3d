@@ -6,16 +6,35 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:57:24 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/21 12:03:44 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/21 21:13:54 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "term3d.h"
 
+// 各グリフの点群情報を破壊
+// (グリフ配列は固定長)
+static void	destroy_glyphs(t_system *system)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < system->n_glyphs)
+	{
+		free(system->glyphs[i].points);
+		i += 1;
+	}
+}
+
 void	t3_handle_text(t_system *system)
 {
 	system->src_mode = T3_SRC_TEXT;
 	system->n_glyphs = t3_read_glyphs(system->glyphs);
+	if (system->n_glyphs != T3_GLYPH_NUM)
+	{
+		destroy_glyphs(system);
+		system->n_glyphs = 0;
+	}
 	if (system->n_glyphs == 0)
 		exit(1);
 	t3_scan_message(system);
