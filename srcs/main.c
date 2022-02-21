@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:57:24 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/19 18:16:15 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/21 10:33:35 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	t3_handle_file(t_system *system, char *filename)
 	if (!system->points_original)
 		exit(1);
 	system->n_points = 0;
-	while (t3_is_fintie(system->points_original[system->n_points][0]))
+	while (isfinite(system->points_original[system->n_points][0]))
 		system->n_points += 1;
 }
 

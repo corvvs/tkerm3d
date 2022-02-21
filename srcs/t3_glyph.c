@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 22:01:55 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/19 18:16:32 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/21 11:59:08 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,6 @@ size_t	t3_read_glyph(t_glyph *glyphs)
 		curr_glyph = next_glyph;
 		g += 1;
 	}
-	rd_free_strarray(&lines);
+	t3_destroy_strarray(lines);
 	return (g);
 }

@@ -6,30 +6,38 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 22:47:34 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/19 00:47:55 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/21 11:58:58 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "term3d.h"
 
+static char	**read_all_lines(const char *file_path)
+{
+	char		*content;
+	char		**lines;
+
+	content = rd_read_file_content(file_path);
+	if (!content)
+	{
+		return (NULL);
+	}
+	lines = ft_split(content, '\n');
+	free(content);
+	return (lines);
+}
+
 // 文字列配列を破壊する
-void	rd_free_strarray(char ***pstrs)
+void	t3_destroy_strarray(char **strs)
 {
 	size_t	i;
-	char	**strs;
 
-	if (pstrs)
-	{
-		strs = *pstrs;
-		if (strs)
-		{
-			i = 0;
-			while (strs[i])
-				free(strs[i++]);
-			free(strs);
-		}
-		*pstrs = NULL;
-	}
+	if (!strs)
+		return ;
+	i = 0;
+	while (strs[i])
+		free(strs[i++]);
+	free(strs);
 }
 
 // 文字列配列の長さを求める
@@ -45,19 +53,20 @@ size_t	t3_count_lines(char **lines)
 	return (n);
 }
 
-char	**t3_read_lines(const char *file_path)
+// linesの中身をベクトルに変換してpointsに詰める。最大n個。変換できた個数を返す。
+size_t	vectorize_lines_into_points(size_t n, char **lines, t_vector3d *points)
 {
-	char		*content;
-	char		**lines;
+	size_t		i;
 
-	content = rd_read_file_content(file_path);
-	if (!content)
+	i = 0;
+	points[n][i] = NAN;
+	while (i < n)
 	{
-		return (NULL);
+		if (!t3_vectorize(lines[i], points[i]))
+			break ;
+		i += 1;
 	}
-	lines = ft_split(content, '\n');
-	free(content);
-	return (lines);
+	return (i);
 }
 
 // file_path の中身を1つの文字列として読み取る
@@ -68,20 +77,23 @@ t_vector3d	*t3_read_vectors_from_file(const char *file_path)
 	size_t		n;
 	size_t		i;
 
-	lines = t3_read_lines(file_path);
+	lines = read_all_lines(file_path);
 	if (!lines)
-		return (NULL);
-	n = t3_count_lines(lines);
-	points = malloc(sizeof(t_vector3d) * (n + 1));
-	if (!points)
-		return (NULL);
-	points[n][0] = t3_nan();
-	i = 0;
-	while (i < n)
 	{
-		if (!t3_vectorize(lines[i], points[i]))
-			return (NULL);
-		i += 1;
+		return (NULL);
+	}
+	n = t3_count_lines(lines);
+	i = 0;
+	points = malloc(sizeof(t_vector3d) * (n + 1));
+	if (points)
+	{
+		i = vectorize_lines_into_points(n, lines, points);
+	}
+	t3_destroy_strarray(lines);
+	if (i < n)
+	{
+		free(points);
+		return (NULL);
 	}
 	return (points);
 }

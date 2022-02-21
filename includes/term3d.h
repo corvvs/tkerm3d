@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:58:31 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/20 17:11:14 by tkomatsu         ###   ########.fr       */
+/*   Updated: 2022/02/21 11:01:27 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <sys/select.h>
 # include <sys/ioctl.h>
 # include <stdbool.h>
+# include <float.h>
 
 # define T3_MAX_WIDTH 350
 # define T3_MAX_HEIGHT 100
@@ -141,12 +142,10 @@ void		t3_render_loop(t_system *system);
 
 void		t3_init_render_params(t_system *system);
 
-bool		t3_is_fintie(const double val);
-double		t3_nan(void);
 size_t		t3_count_lines(char **lines);
 bool		t3_vectorize(const char *str, t_vector3d vector);
 t_vector3d	*t3_read_vectors_from_file(const char *file_path);
-void		rd_free_strarray(char ***pstrs);
+void		t3_destroy_strarray(char **pstrs);
 
 void		t3_affine_identity(t_affine a);
 void		t3_affine_copy(t_affine dest, const t_affine src);
@@ -199,8 +198,6 @@ void		t3_allocate_points(const char *str, t_system *system);
 t_ut		t3_get_ut(void);
 t_ut		t3_wait_until(t_ut this_time);
 
-bool		t3_is_fintie(const double val);
-double		t3_nan(void);
 bool		t3_vectorize(const char *str, t_vector3d vector);
 
 int			t3_max(int a, int b);
