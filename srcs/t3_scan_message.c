@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 15:55:00 by tkomatsu          #+#    #+#             */
-/*   Updated: 2022/02/21 12:14:38 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/21 20:31:36 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,5 @@ bool	t3_scan_message(t_system *sys)
 		message_to_points(sys, sys->message);
 		t3_repoint(sys);
 	}
-	dd_malloc_balance(0);
 	return (true);
 }
