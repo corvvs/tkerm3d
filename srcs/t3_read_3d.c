@@ -6,13 +6,13 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 22:47:34 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/21 11:58:58 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/21 12:06:21 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "term3d.h"
 
-static char	**read_all_lines(const char *file_path)
+char	**t3_read_all_lines(const char *file_path)
 {
 	char		*content;
 	char		**lines;
@@ -77,7 +77,7 @@ t_vector3d	*t3_read_vectors_from_file(const char *file_path)
 	size_t		n;
 	size_t		i;
 
-	lines = read_all_lines(file_path);
+	lines = t3_read_all_lines(file_path);
 	if (!lines)
 	{
 		return (NULL);

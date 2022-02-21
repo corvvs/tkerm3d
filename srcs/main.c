@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:57:24 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/21 10:33:35 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/21 12:03:44 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	t3_handle_text(t_system *system)
 {
 	system->src_mode = T3_SRC_TEXT;
-	system->n_glyphs = t3_read_glyph(system->glyphs);
+	system->n_glyphs = t3_read_glyphs(system->glyphs);
 	if (system->n_glyphs == 0)
 		exit(1);
 	t3_scan_message(system);

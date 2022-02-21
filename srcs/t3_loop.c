@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   t3_loop.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkomatsu <tkomatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 15:38:39 by tkomatsu          #+#    #+#             */
-/*   Updated: 2022/02/20 15:38:41 by tkomatsu         ###   ########.fr       */
+/*   Updated: 2022/02/20 21:36:02 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "term3d.h"
 
 // 表示用変換の構成
-void	t3_forming_transform(t_system *system)
+static void	forming_transform(t_system *system)
 {
 	const t_optics	*opt = &system->optics;
 
@@ -28,11 +28,11 @@ void	t3_forming_transform(t_system *system)
 }
 
 //　表示変換を適用する
-void	t3_transform_to_render(t_system *system)
+void	transform_to_render(t_system *system)
 {
 	size_t	i;
 
-	t3_forming_transform(system);
+	forming_transform(system);
 	i = 0;
 	while (i < system->n_points)
 	{
@@ -56,7 +56,7 @@ void	t3_render_loop(t_system *system)
 	opt = &system->optics;
 	while (true)
 	{
-		t3_transform_to_render(system);
+		transform_to_render(system);
 		t3_render(system);
 		t1 = t3_wait_until(t0 + opt->uspf);
 		dt = 2 * (0.1 + pow(sin(opt->phi), 0)) * opt->omega * (t1 - t0);

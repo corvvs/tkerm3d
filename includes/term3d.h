@@ -28,6 +28,7 @@
 
 # define T3_MAX_WIDTH 350
 # define T3_MAX_HEIGHT 100
+# define T3_GLYPH_FILE "./printables.txt"
 // グリフ総数
 # define T3_GLYPH_NUM 96
 // 1つのグリフの横幅(文字数)
@@ -127,12 +128,13 @@ typedef struct s_system {
 	size_t		len_message;
 
 	size_t		n_pixelbuffer;
-	char		*pixelbuffer;
+	char		pixelbuffer[T3_MAX_HEIGHT * (T3_MAX_WIDTH + 1)];
 }	t_system;
 
 char		**ft_rawsplit(char const *s, char c);
 char		**ft_split(char const *s, char c);
 
+char		**t3_read_all_lines(const char *file_path);
 char		*rd_read_file_content(const char *filename);
 
 void		t3_setup_system(t_system *system);
@@ -190,7 +192,7 @@ void		t3_centralize_points(size_t n, t_vector3d *points);
 int			t3_get_key(void);
 void		t3_update_by_key(t_system *system);
 
-size_t		t3_read_glyph(t_glyph *glyphs);
+size_t		t3_read_glyphs(t_glyph *glyphs);
 int			t3_stdin_to_tty(void);
 bool		t3_scan_message(t_system *sys);
 void		t3_allocate_points(const char *str, t_system *system);

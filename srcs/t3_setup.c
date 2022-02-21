@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   t3_setup.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkomatsu <tkomatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 15:38:46 by tkomatsu          #+#    #+#             */
-/*   Updated: 2022/02/20 15:38:47 by tkomatsu         ###   ########.fr       */
+/*   Updated: 2022/02/21 12:23:31 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,6 @@ void	t3_init_render_params(t_system *system)
 	system->optics.uspf = 1000000 / system->optics.fps;
 	system->n_pixelbuffer
 		= system->optics.height * (system->optics.width + 1);
-	if (system->pixelbuffer)
-		free(system->pixelbuffer);
-	system->pixelbuffer = malloc(sizeof(char) * system->n_pixelbuffer);
 }
 
 // [処理用データ構造の初期化]
