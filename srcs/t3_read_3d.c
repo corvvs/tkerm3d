@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 22:47:34 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/21 12:06:21 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/21 22:18:55 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,13 @@ char	**t3_read_all_lines(const char *file_path)
 	}
 	lines = ft_split(content, '\n');
 	free(content);
+	if (!lines)
+	{
+		dprintf(STDERR_FILENO, T3_COLOR_YELLOW
+			"Error: %s: failed to split."
+			T3_COLOR_RESET "\n", file_path);
+		return (NULL);
+	}
 	return (lines);
 }
 

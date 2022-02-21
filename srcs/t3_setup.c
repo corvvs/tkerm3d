@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 15:38:46 by tkomatsu          #+#    #+#             */
-/*   Updated: 2022/02/21 12:23:31 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/21 22:05:03 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@ void	t3_check_tty_out(void)
 {
 	if (isatty(STDOUT_FILENO) == 1)
 		return ;
-	dprintf(STDERR_FILENO, "Error: stdout shoule be bound to tty.\n");
+	dprintf(STDERR_FILENO, T3_COLOR_YELLOW
+		"Error: stdout shoule be bound to tty."
+		T3_COLOR_RESET "\n");
 	exit(1);
 }
 

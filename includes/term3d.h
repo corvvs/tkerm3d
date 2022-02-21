@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:58:31 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/21 11:01:27 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/21 22:14:56 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <sys/ioctl.h>
 # include <stdbool.h>
 # include <float.h>
+# include "t3_color.h"
 
 # define T3_MAX_WIDTH 350
 # define T3_MAX_HEIGHT 100
@@ -193,7 +194,6 @@ int			t3_get_key(void);
 void		t3_update_by_key(t_system *system);
 
 size_t		t3_read_glyphs(t_glyph *glyphs);
-int			t3_stdin_to_tty(void);
 bool		t3_scan_message(t_system *sys);
 void		t3_allocate_points(const char *str, t_system *system);
 

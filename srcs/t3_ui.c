@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 10:37:24 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/21 21:21:47 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/21 22:50:25 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@ void	t3_repoint(t_system *system)
 	system->points_animated = malloc(size);
 	if (!system->points_animated)
 	{
+		dprintf(STDERR_FILENO, T3_COLOR_YELLOW
+			"Error: failed to allocate points_animated."
+			T3_COLOR_RESET "\n");
 		exit(1);
 	}
 }

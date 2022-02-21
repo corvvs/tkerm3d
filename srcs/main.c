@@ -6,11 +6,18 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:57:24 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/21 21:13:54 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/21 22:15:03 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "term3d.h"
+
+// STDIN_FILENO を /dev/tty/stdin に割り当て直す
+int	stdin_to_tty(void)
+{
+	close(STDIN_FILENO);
+	return (dup2(STDOUT_FILENO, STDIN_FILENO));
+}
 
 // 各グリフの点群情報を破壊
 // (グリフ配列は固定長)
@@ -30,15 +37,20 @@ void	t3_handle_text(t_system *system)
 {
 	system->src_mode = T3_SRC_TEXT;
 	system->n_glyphs = t3_read_glyphs(system->glyphs);
-	if (system->n_glyphs != T3_GLYPH_NUM)
+	if (0 < system->n_glyphs && system->n_glyphs != T3_GLYPH_NUM)
 	{
+		dprintf(STDERR_FILENO, T3_COLOR_YELLOW
+			"Error: %s: failed to read glyth file."
+			T3_COLOR_RESET "\n", T3_GLYPH_FILE);
 		destroy_glyphs(system);
 		system->n_glyphs = 0;
 	}
 	if (system->n_glyphs == 0)
+	{
 		exit(1);
+	}
 	t3_scan_message(system);
-	t3_stdin_to_tty();
+	stdin_to_tty();
 }
 
 void	t3_handle_file(t_system *system, char *filename)

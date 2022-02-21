@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 11:36:10 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/19 00:48:19 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/21 21:57:35 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 
 static void	*quit_with_error(const char *error)
 {
-	printf("\e[93mError\n%s\e[m\n", error);
+	dprintf(STDERR_FILENO, T3_COLOR_YELLOW
+		"Error: %s"
+		T3_COLOR_RESET "\n", error);
 	return (NULL);
 }
 

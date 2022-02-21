@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 22:01:55 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/21 21:13:21 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/21 22:01:44 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,9 @@ void	validate_glyph_file(char ***lines_ptr)
 		if (strlen(*lines) != T3_GLYPH_WIDTH)
 		{
 			t3_destroy_strarray(*lines_ptr);
-			dprintf(STDERR_FILENO, "Error: %s: invalid file.\n", T3_GLYPH_FILE);
+			dprintf(STDERR_FILENO, T3_COLOR_YELLOW
+				"Error: %s: invalid file."
+				T3_COLOR_RESET "\n", T3_GLYPH_FILE);
 			exit(1);
 		}
 		lines += 1;
@@ -95,7 +97,9 @@ void	validate_glyph_file(char ***lines_ptr)
 	if (lines - *lines_ptr != T3_GLYPH_HEIGHT * T3_GLYPH_NUM)
 	{
 		t3_destroy_strarray(*lines_ptr);
-		dprintf(STDERR_FILENO, "Error: %s: invalid file.\n", T3_GLYPH_FILE);
+		dprintf(STDERR_FILENO, T3_COLOR_YELLOW
+			"Error: %s: invalid file."
+			T3_COLOR_RESET "\n", T3_GLYPH_FILE);
 		exit(1);
 	}
 }
