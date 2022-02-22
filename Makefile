@@ -100,9 +100,12 @@ leak: CFLAGS += $(DEBUG_FLAGS)
 leak: re
 	@printf "$(_BLUE)Leak check build done$(_END)\n"
 
+norm:
+	@python3 -m norminette srcs includes
+
 test: all
 	./$(NAME)
 
 -include $(DEPENDS)
 
-PHONY: all clean fclean re debug leak test
+PHONY: all clean fclean re debug leak test norm

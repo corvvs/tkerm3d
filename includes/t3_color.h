@@ -1,32 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rd_file.h                                          :+:      :+:    :+:   */
+/*   t3_color.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/01 11:37:12 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/21 21:52:10 by corvvs           ###   ########.fr       */
+/*   Created: 2022/02/21 21:47:33 by corvvs            #+#    #+#             */
+/*   Updated: 2022/02/21 21:51:24 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef RD_FILE_H
-# define RD_FILE_H
+#ifndef T3_COLOR_H
+# define T3_COLOR_H
 
-# include <unistd.h>
-# include <fcntl.h>
-# include <stdbool.h>
-# include <stdio.h>
-# include <string.h>
-# include <stdlib.h>
-# define FT_BUFSIZ 4096
-# include "t3_color.h"
-
-typedef struct s_plastic_buffer
-{
-	char	*body;
-	size_t	cap;
-	size_t	used;
-}	t_plastic_buffer;
+# define T3_COLOR_YELLOW "\e[93m"
+# define T3_COLOR_RESET "\e[m"
 
 #endif

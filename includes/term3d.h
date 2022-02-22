@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:58:31 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/20 17:11:14 by tkomatsu         ###   ########.fr       */
+/*   Updated: 2022/02/21 22:14:56 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,12 @@
 # include <sys/select.h>
 # include <sys/ioctl.h>
 # include <stdbool.h>
+# include <float.h>
+# include "t3_color.h"
 
 # define T3_MAX_WIDTH 350
 # define T3_MAX_HEIGHT 100
+# define T3_GLYPH_FILE "./printables.txt"
 // グリフ総数
 # define T3_GLYPH_NUM 96
 // 1つのグリフの横幅(文字数)
@@ -126,12 +129,13 @@ typedef struct s_system {
 	size_t		len_message;
 
 	size_t		n_pixelbuffer;
-	char		*pixelbuffer;
+	char		pixelbuffer[T3_MAX_HEIGHT * (T3_MAX_WIDTH + 1)];
 }	t_system;
 
 char		**ft_rawsplit(char const *s, char c);
 char		**ft_split(char const *s, char c);
 
+char		**t3_read_all_lines(const char *file_path);
 char		*rd_read_file_content(const char *filename);
 
 void		t3_setup_system(t_system *system);
@@ -141,12 +145,10 @@ void		t3_render_loop(t_system *system);
 
 void		t3_init_render_params(t_system *system);
 
-bool		t3_is_fintie(const double val);
-double		t3_nan(void);
 size_t		t3_count_lines(char **lines);
 bool		t3_vectorize(const char *str, t_vector3d vector);
 t_vector3d	*t3_read_vectors_from_file(const char *file_path);
-void		rd_free_strarray(char ***pstrs);
+void		t3_destroy_strarray(char **pstrs);
 
 void		t3_affine_identity(t_affine a);
 void		t3_affine_copy(t_affine dest, const t_affine src);
@@ -191,16 +193,13 @@ void		t3_centralize_points(size_t n, t_vector3d *points);
 int			t3_get_key(void);
 void		t3_update_by_key(t_system *system);
 
-size_t		t3_read_glyph(t_glyph *glyphs);
-int			t3_stdin_to_tty(void);
+size_t		t3_read_glyphs(t_glyph *glyphs);
 bool		t3_scan_message(t_system *sys);
 void		t3_allocate_points(const char *str, t_system *system);
 
 t_ut		t3_get_ut(void);
 t_ut		t3_wait_until(t_ut this_time);
 
-bool		t3_is_fintie(const double val);
-double		t3_nan(void);
 bool		t3_vectorize(const char *str, t_vector3d vector);
 
 int			t3_max(int a, int b);
