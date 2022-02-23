@@ -12,12 +12,12 @@
 
 #include "rd_file.h"
 
-static void	*quit_with_error(const char *error)
+static void	*exit_with_error(const char *error)
 {
 	dprintf(STDERR_FILENO, T3_COLOR_YELLOW
 		"Error: %s"
 		T3_COLOR_RESET "\n", error);
-	return (NULL);
+	exit(EXIT_FAILURE);
 }
 
 static void	deploy_buffer(t_plastic_buffer *buffer)
@@ -77,14 +77,14 @@ char	*rd_read_file_content(const char *filename)
 
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
-		return (quit_with_error("failed to open file"));
+		return (exit_with_error("failed to open file"));
 	content = t3_read_from_fd(fd);
 	if (!content)
-		return (quit_with_error("failed to read file content"));
+		return (exit_with_error("failed to read file content"));
 	if (close(fd) == -1)
 	{
 		free(content);
-		return (quit_with_error("failed to close file"));
+		return (exit_with_error("failed to close file"));
 	}
 	return (content);
 }
