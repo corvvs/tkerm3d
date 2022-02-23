@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:58:31 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/23 11:43:07 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/23 18:01:25 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # define T3_MAX_WIDTH 350
 # define T3_MAX_HEIGHT 100
 # define T3_GLYPH_FILE "./printables.txt"
+# define T3_EXTENSION_3D ".3d"
 // グリフ総数
 # define T3_GLYPH_NUM 96
 // 1つのグリフの横幅(文字数)
@@ -65,6 +66,8 @@ typedef enum e_source {
 	T3_SRC_DUMMY,
 	T3_SRC_TEXT,
 	T3_SRC_FILE_3D,
+	T3_SRC_FILE_UNEXPECTED,
+	T3_SRC_TOO_MANY,
 }	t_source;
 
 # define T3_CBEZIER_SIZE 1000
@@ -152,6 +155,9 @@ typedef struct s_system {
 char		**ft_rawsplit(char const *s, char c);
 char		**ft_split(char const *s, char c);
 size_t		ft_cntchr(const char *str, char c);
+bool		ft_str_ensdwith(const char *str, const char *suffix);
+
+void		t3_read_source(t_system *system, int argc, char **argv);
 
 char		**t3_read_all_lines(const char *file_path);
 char		*t3_read_from_fd(const int fd);

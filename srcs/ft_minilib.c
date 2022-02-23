@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_cntchr.c                                        :+:      :+:    :+:   */
+/*   ft_minilib.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/23 02:28:18 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/23 02:29:31 by corvvs           ###   ########.fr       */
+/*   Created: 2022/02/23 18:00:25 by corvvs            #+#    #+#             */
+/*   Updated: 2022/02/23 18:00:26 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,4 +24,14 @@ size_t	ft_cntchr(const char *str, char c)
 		++str;
 	}
 	return (n);
+}
+
+bool	ft_str_ensdwith(const char *str, const char *suffix)
+{
+	const size_t	nstr = strlen(str);
+	const size_t	nsuffix = strlen(suffix);
+
+	if (nstr < nsuffix)
+		return (false);
+	return (strcmp(str + (nstr - nsuffix), suffix) == 0);
 }
