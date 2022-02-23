@@ -77,14 +77,14 @@ char	*rd_read_file_content(const char *filename)
 
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
-		return (exit_with_error("failed to open file"));
+		exit_with_error("failed to open file");
 	content = t3_read_from_fd(fd);
 	if (!content)
-		return (exit_with_error("failed to read file content"));
+		exit_with_error("failed to read file content");
 	if (close(fd) == -1)
 	{
 		free(content);
-		return (exit_with_error("failed to close file"));
+		exit_with_error("failed to close file");
 	}
 	return (content);
 }
