@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 15:38:46 by tkomatsu          #+#    #+#             */
-/*   Updated: 2022/02/23 18:06:42 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/23 18:58:57 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	t3_init_render_params(t_system *system)
 	system->optics.sq_size_y
 		= (double)(2 * system->optics.offset_y) / system->optics.height;
 	memcpy(system->optics.rot_axis, (t_vector3d){0, 1, 0}, sizeof(double) * 3);
-	system->optics.omega = 1.0;
+	system->optics.omega = 0.5;
 	system->optics.t = 0;
 	system->optics.fps = 120;
 	system->optics.us_per_frame = 1000000 / system->optics.fps;
