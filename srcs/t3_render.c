@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   t3_render.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkomatsu <tkomatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 16:02:43 by tkomatsu          #+#    #+#             */
-/*   Updated: 2022/02/20 16:02:45 by tkomatsu         ###   ########.fr       */
+/*   Updated: 2022/02/23 11:33:46 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "term3d.h"
 
-// ピクセルバッファをクリア
-void	t3_clear_pixelbuffer(t_system *system)
+// zero clear pixel-buffer.
+static void	clear_pixelbuffer(t_system *system)
 {
 	size_t	i;
 
@@ -25,8 +25,8 @@ void	t3_clear_pixelbuffer(t_system *system)
 	}
 }
 
-// ピクセルバッファをセット
-void	t3_fill_pixelbuffer(t_system *system)
+// fill pixel-buffer statistically.
+static void	fill_pixelbuffer(t_system *system)
 {
 	size_t	i;
 	double	x;
@@ -52,7 +52,7 @@ void	t3_fill_pixelbuffer(t_system *system)
 	}
 }
 
-char	t3_char_for_pixel(size_t count)
+static char	char_for_pixel(size_t count)
 {
 	if (count > 3)
 		return ('#');
@@ -63,17 +63,15 @@ char	t3_char_for_pixel(size_t count)
 	return (' ');
 }
 
-// ピクセルバッファを表示
-void	t3_render(t_system *system)
+// construct print-buffer(will be passed to `write` func directly)
+// from pixel-buffer.
+static void	fill_printbuffer(t_system *system)
 {
 	char	*buffer;
 	size_t	i;
 	size_t	j;
 
-	buffer = system->pixelbuffer;
-	t3_clear_pixelbuffer(system);
-	t3_fill_pixelbuffer(system);
-	write(STDOUT_FILENO, T3_ES_CLEAR, 4);
+	buffer = system->printbuffer;
 	i = 0;
 	while (i < system->optics.height)
 	{
@@ -81,12 +79,20 @@ void	t3_render(t_system *system)
 		while (j < system->optics.width)
 		{
 			buffer[i * (system->optics.width + 1) + j]
-				= t3_char_for_pixel(system->optics.pixels[i][j]);
+				= char_for_pixel(system->optics.pixels[i][j]);
 			j += 1;
 		}
 		buffer[i * (system->optics.width + 1) + j] = '\n';
 		i += 1;
 	}
-	write(STDOUT_FILENO, buffer,
+}
+
+void	t3_render(t_system *system)
+{
+	clear_pixelbuffer(system);
+	fill_pixelbuffer(system);
+	write(STDOUT_FILENO, T3_ES_CLEAR, strlen(T3_ES_CLEAR));
+	fill_printbuffer(system);
+	write(STDOUT_FILENO, system->printbuffer,
 		system->optics.height * (system->optics.width + 1));
 }

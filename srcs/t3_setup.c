@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 15:38:46 by tkomatsu          #+#    #+#             */
-/*   Updated: 2022/02/21 22:05:03 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/23 11:36:34 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,17 @@ void	t3_check_tty_out(void)
 		"Error: stdout shoule be bound to tty."
 		T3_COLOR_RESET "\n");
 	exit(1);
+}
+
+static t_cubic_bezier	cubic_bezier(double x1, double y1, double x2, double y2)
+{
+	t_cubic_bezier	cb;
+
+	cb.x1 = x1;
+	cb.y1 = y1;
+	cb.x2 = x2;
+	cb.y2 = y2;
+	return (cb);
 }
 
 // opticsの設定
@@ -41,12 +52,14 @@ void	t3_init_render_params(t_system *system)
 	system->optics.sq_size_y
 		= (double)(2 * system->optics.offset_y) / system->optics.height;
 	memcpy(system->optics.rot_axis, (t_vector3d){0, 1, 0}, sizeof(double) * 3);
-	system->optics.phi = 0;
-	system->optics.omega = M_PI / 1000000;
+	system->optics.omega = 1.0;
+	system->optics.t = 0;
 	system->optics.fps = 120;
-	system->optics.uspf = 1000000 / system->optics.fps;
+	system->optics.us_per_frame = 1000000 / system->optics.fps;
 	system->n_pixelbuffer
 		= system->optics.height * (system->optics.width + 1);
+	system->optics.bezier = cubic_bezier(0.68, -0.6, 0.32, 1.6);
+	t3_setup_cubic_bezier(&system->optics.bezier);
 }
 
 // [処理用データ構造の初期化]
@@ -55,5 +68,5 @@ void	t3_setup_system(t_system *system)
 	t3_init_render_params(system);
 	t3_affine_identity(system->transform_static);
 	t3_centralize_points(system->n_points, system->points_original);
-	t3_repoint(system);
+	t3_realloc_points(system);
 }

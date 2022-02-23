@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 22:47:34 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/21 22:18:55 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/23 11:06:13 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ size_t	vectorize_lines_into_points(size_t n, char **lines, t_vector3d *points)
 	return (i);
 }
 
-// file_path の中身を1つの文字列として読み取る
 t_vector3d	*t3_read_vectors_from_file(const char *file_path)
 {
 	char		**lines;

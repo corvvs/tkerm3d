@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:58:31 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/21 22:14:56 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/23 11:43:07 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,36 +67,54 @@ typedef enum e_source {
 	T3_SRC_FILE_3D,
 }	t_source;
 
+# define T3_CBEZIER_SIZE 1000
+
+// cubic-bezier(3次ベジェ曲線)によるアニメーションを表現する構造体
+typedef struct s_cubic_bezier {
+	double	x1;
+	double	y1;
+	double	x2;
+	double	y2;
+	double	xs[T3_CBEZIER_SIZE + 1];
+	double	ys[T3_CBEZIER_SIZE + 1];
+	double	ps[T3_CBEZIER_SIZE + 1];
+}	t_cubic_bezier;
+
 // カメラパラメータ構造体
 // sq_size:  スクエアサイズ
 // offset:   オフセット
 // 位置(-offset_x, -offset_y)が原点(0, 0)に来るように移動してからレンダリングする
 // rot_axis: 回転軸
-// phi:      回転角
-// omega:    角速度、つまり 1秒あたりの回転角度[ラジアン/マイクロ秒]
+// t:        経過時間(us)
+// omega:    時間経過倍率; 1.0で等速, 2.0で倍速
+//           omega == 1.0 の時、1秒あたり1回転する
+//           omega == 2.0 なら、1秒あたり2回転する
 // width:    横文字数
 // height:   縦文字数
 // pixels:   ピクセルバッファ
-// uspf:     マイクロ秒毎フレーム
+// us_per_frame:     マイクロ秒毎フレーム
+// bezier:   cubic-bezierによるアニメーションパラメータ
 // animate:  時間変化するかどうかのフラグ
 typedef struct s_optics {
-	double		sq_size_x;
-	double		sq_size_y;
-	double		offset_x;
-	double		offset_y;
-	double		scale_factor;
-	t_vector3d	rot_axis;
+	double			sq_size_x;
+	double			sq_size_y;
+	double			offset_x;
+	double			offset_y;
+	double			scale_factor;
+	t_vector3d		rot_axis;
 
-	double		phi;
-	double		omega;
+	double			t;
+	double			omega;
 
-	size_t		width;
-	size_t		height;
-	size_t		pixels[T3_MAX_HEIGHT][T3_MAX_WIDTH];
-	double		fps;
-	t_ut		uspf;
+	size_t			width;
+	size_t			height;
+	size_t			pixels[T3_MAX_HEIGHT][T3_MAX_WIDTH];
+	double			fps;
+	t_ut			us_per_frame;
 
-	bool		animate;
+	t_cubic_bezier	bezier;
+
+	bool			animate;
 }	t_optics;
 
 // 系全体を表す構造体
@@ -123,19 +141,20 @@ typedef struct s_system {
 	t_optics	optics;
 
 	t_source	src_mode;
-	size_t		n_glyphs;
 	t_glyph		glyphs[T3_GLYPH_NUM];
 	char		message[T3_MAX_MSGLEN + 1];
 	size_t		len_message;
 
 	size_t		n_pixelbuffer;
-	char		pixelbuffer[T3_MAX_HEIGHT * (T3_MAX_WIDTH + 1)];
+	char		printbuffer[T3_MAX_HEIGHT * (T3_MAX_WIDTH + 1)];
 }	t_system;
 
 char		**ft_rawsplit(char const *s, char c);
 char		**ft_split(char const *s, char c);
+size_t		ft_cntchr(const char *str, char c);
 
 char		**t3_read_all_lines(const char *file_path);
+char		*t3_read_from_fd(const int fd);
 char		*rd_read_file_content(const char *filename);
 
 void		t3_setup_system(t_system *system);
@@ -181,28 +200,35 @@ void		t3_render(t_system *system);
 
 void		t3_update_omega(t_system *system, int key);
 void		t3_update_offset(t_system *system, int key);
-void		t3_update_flame(t_system *system, int key);
+void		t3_update_frame(t_system *system, int key);
 void		t3_update_scale(t_system *system, int key);
-void		t3_udpate_axis(t_system *system, int key);
+void		t3_update_axis(t_system *system, int key);
+void		t3_update_bezier(t_system *system);
 void		t3_update_animate(t_system *system);
 void		t3_reset_params(t_system *system);
 
 bool		t3_scan_message(t_system *system);
-void		t3_repoint(t_system *system);
+void		t3_realloc_points(t_system *system);
 void		t3_centralize_points(size_t n, t_vector3d *points);
 int			t3_get_key(void);
 void		t3_update_by_key(t_system *system);
 
-size_t		t3_read_glyphs(t_glyph *glyphs);
+bool		t3_read_glyphs(t_glyph *glyphs);
 bool		t3_scan_message(t_system *sys);
-void		t3_allocate_points(const char *str, t_system *system);
+void		t3_allocate_points_for_message(const char *str, t_system *system);
 
 t_ut		t3_get_ut(void);
 t_ut		t3_wait_until(t_ut this_time);
 
 bool		t3_vectorize(const char *str, t_vector3d vector);
+bool		t3_strs_to_cubic_bezier(
+				char **strs, t_cubic_bezier *bezier);
 
 int			t3_max(int a, int b);
 int			t3_min(int a, int b);
+double		t3_fmod(double x, double y);
+
+void		t3_setup_cubic_bezier(t_cubic_bezier *bezier);
+double		t3_ratio_by_time(t_cubic_bezier *bezier, double t);
 
 #endif

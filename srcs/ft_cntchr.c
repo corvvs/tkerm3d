@@ -1,26 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t3_update_omega.c                                  :+:      :+:    :+:   */
+/*   ft_cntchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/20 16:01:31 by tkomatsu          #+#    #+#             */
-/*   Updated: 2022/02/23 11:44:26 by corvvs           ###   ########.fr       */
+/*   Created: 2022/02/23 02:28:18 by corvvs            #+#    #+#             */
+/*   Updated: 2022/02/23 02:29:31 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "term3d.h"
 
-void	t3_update_omega(t_system *system, int key)
+// count occurences of a character `c` in a string `str`
+size_t	ft_cntchr(const char *str, char c)
 {
-	if (key == 'e' || key == 'q')
+	size_t	n;
+
+	n = 0;
+	while (*str)
 	{
-		system->optics.omega += ((key == 'e') * 2 - 1) * 0.1;
-		dprintf(
-			STDERR_FILENO,
-			"omega -> %1.2f[rot/s]\n",
-			system->optics.omega
-			);
+		n += (*str == c);
+		++str;
 	}
+	return (n);
 }
