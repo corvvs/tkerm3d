@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 22:58:31 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/23 11:43:07 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/23 18:01:25 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # define T3_MAX_WIDTH 350
 # define T3_MAX_HEIGHT 100
 # define T3_GLYPH_FILE "./printables.txt"
+# define T3_EXTENSION_3D ".3d"
 // グリフ総数
 # define T3_GLYPH_NUM 96
 // 1つのグリフの横幅(文字数)
@@ -65,6 +66,8 @@ typedef enum e_source {
 	T3_SRC_DUMMY,
 	T3_SRC_TEXT,
 	T3_SRC_FILE_3D,
+	T3_SRC_FILE_UNEXPECTED,
+	T3_SRC_TOO_MANY,
 }	t_source;
 
 # define T3_CBEZIER_SIZE 1000
@@ -125,11 +128,11 @@ typedef struct s_optics {
 // transform_static:   回転直前までもっていくアフィン変換
 // transform_animated: 回転適用後のアフィン変換
 // src_mode:           描画するものが何なのか
-// n_glyphs:           グリフの数
-// gliphs:             グリフのデータ
+// glyphs:             グリフのデータ
 // message:            任意入力メッセージ
 // len_message:        現在のメッセージ長
-// n_pixelbuffer:      ピクセルバッファのサイズ
+// printbuffer:        プリントバッファ; ターミナルにwriteされる文字列データ。
+// n_printbuffer:      プリントバッファの**実際の**サイズ
 typedef struct s_system {
 	size_t		n_points;
 	t_vector3d	*points_original;
@@ -145,13 +148,16 @@ typedef struct s_system {
 	char		message[T3_MAX_MSGLEN + 1];
 	size_t		len_message;
 
-	size_t		n_pixelbuffer;
 	char		printbuffer[T3_MAX_HEIGHT * (T3_MAX_WIDTH + 1)];
+	size_t		n_printbuffer;
 }	t_system;
 
 char		**ft_rawsplit(char const *s, char c);
 char		**ft_split(char const *s, char c);
 size_t		ft_cntchr(const char *str, char c);
+bool		ft_str_endswith(const char *str, const char *suffix);
+
+void		t3_read_source(t_system *system, int argc, char **argv);
 
 char		**t3_read_all_lines(const char *file_path);
 char		*t3_read_from_fd(const int fd);

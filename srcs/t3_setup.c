@@ -6,11 +6,22 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 15:38:46 by tkomatsu          #+#    #+#             */
-/*   Updated: 2022/02/23 11:36:34 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/23 18:06:42 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "term3d.h"
+
+static t_cubic_bezier	cubic_bezier(double x1, double y1, double x2, double y2)
+{
+	t_cubic_bezier	cb;
+
+	cb.x1 = x1;
+	cb.y1 = y1;
+	cb.x2 = x2;
+	cb.y2 = y2;
+	return (cb);
+}
 
 // stdoutはどちらもターミナルになっている必要がある。
 // (まともな出力と、stdinをターミナルに向け直すために必要)
@@ -24,18 +35,7 @@ void	t3_check_tty_out(void)
 	exit(1);
 }
 
-static t_cubic_bezier	cubic_bezier(double x1, double y1, double x2, double y2)
-{
-	t_cubic_bezier	cb;
-
-	cb.x1 = x1;
-	cb.y1 = y1;
-	cb.x2 = x2;
-	cb.y2 = y2;
-	return (cb);
-}
-
-// opticsの設定
+// set all initial parameters of optics.
 void	t3_init_render_params(t_system *system)
 {
 	struct winsize	ws;
@@ -56,13 +56,12 @@ void	t3_init_render_params(t_system *system)
 	system->optics.t = 0;
 	system->optics.fps = 120;
 	system->optics.us_per_frame = 1000000 / system->optics.fps;
-	system->n_pixelbuffer
+	system->n_printbuffer
 		= system->optics.height * (system->optics.width + 1);
 	system->optics.bezier = cubic_bezier(0.68, -0.6, 0.32, 1.6);
 	t3_setup_cubic_bezier(&system->optics.bezier);
 }
 
-// [処理用データ構造の初期化]
 void	t3_setup_system(t_system *system)
 {
 	t3_init_render_params(system);
