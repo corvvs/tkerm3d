@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 16:02:43 by tkomatsu          #+#    #+#             */
-/*   Updated: 2022/02/23 11:33:46 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/23 13:44:27 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,5 @@ void	t3_render(t_system *system)
 	fill_pixelbuffer(system);
 	write(STDOUT_FILENO, T3_ES_CLEAR, strlen(T3_ES_CLEAR));
 	fill_printbuffer(system);
-	write(STDOUT_FILENO, system->printbuffer,
-		system->optics.height * (system->optics.width + 1));
+	write(STDOUT_FILENO, system->printbuffer, system->n_printbuffer);
 }
