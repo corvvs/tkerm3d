@@ -96,7 +96,7 @@ t_vector3d	*t3_read_vectors_from_file(const char *file_path)
 	{
 		dprintf(STDERR_FILENO, T3_COLOR_YELLOW
 			"Error: %s: %zu: invalid format."
-			T3_COLOR_RESET "\n", file_path, i);
+			T3_COLOR_RESET "\n", file_path, i + 1);
 		free(points);
 		return (NULL);
 	}
