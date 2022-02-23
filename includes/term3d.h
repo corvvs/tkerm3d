@@ -155,7 +155,7 @@ typedef struct s_system {
 char		**ft_rawsplit(char const *s, char c);
 char		**ft_split(char const *s, char c);
 size_t		ft_cntchr(const char *str, char c);
-bool		ft_str_ensdwith(const char *str, const char *suffix);
+bool		ft_str_endswith(const char *str, const char *suffix);
 
 void		t3_read_source(t_system *system, int argc, char **argv);
 

@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 17:54:52 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/23 18:20:33 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/23 18:26:55 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static t_source	detect_source_type(int argc, char **argv)
 	if (argc == 1)
 		return (T3_SRC_TEXT);
 	if (argc == 2 && filepath[0] != '.'
-		&& ft_str_ensdwith(filepath, T3_EXTENSION_3D))
+		&& ft_str_endswith(filepath, T3_EXTENSION_3D))
 		return (T3_SRC_FILE_3D);
 	return (T3_SRC_FILE_UNEXPECTED);
 }

@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 18:00:25 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/23 18:00:26 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/23 18:26:55 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ size_t	ft_cntchr(const char *str, char c)
 	return (n);
 }
 
-bool	ft_str_ensdwith(const char *str, const char *suffix)
+bool	ft_str_endswith(const char *str, const char *suffix)
 {
 	const size_t	nstr = strlen(str);
 	const size_t	nsuffix = strlen(suffix);
