@@ -85,19 +85,18 @@ t_vector3d	*t3_read_vectors_from_file(const char *file_path)
 
 	lines = t3_read_all_lines(file_path);
 	if (!lines)
-	{
 		return (NULL);
-	}
 	n = t3_count_lines(lines);
 	i = 0;
 	points = malloc(sizeof(t_vector3d) * (n + 1));
 	if (points)
-	{
 		i = vectorize_lines_into_points(n, lines, points);
-	}
 	t3_destroy_strarray(lines);
 	if (i < n)
 	{
+		dprintf(STDERR_FILENO, T3_COLOR_YELLOW
+			"Error: %s: %zu: invalid format."
+			T3_COLOR_RESET "\n", file_path, i);
 		free(points);
 		return (NULL);
 	}
