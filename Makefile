@@ -35,6 +35,7 @@ DEBUG_FLAGS = -g3
 
 FILES = ft_raw_split.c \
         ft_split.c \
+        ft_cntchr.c \
         main.c \
         rd_file.c \
         t3_affine.c \
