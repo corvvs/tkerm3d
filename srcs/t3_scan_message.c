@@ -6,13 +6,21 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 15:55:00 by tkomatsu          #+#    #+#             */
-/*   Updated: 2022/02/21 20:31:36 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/23 11:36:34 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "term3d.h"
 
+// このプログラムにおいて "is_printableである" ことと isprint がtrueを返すことが
+// 同値である保証はないので、isprintは使わないことにする。
+static bool	is_printable(const char c)
+{
+	return (' ' <= c && (size_t)c < ' ' + T3_GLYPH_NUM);
+}
+
 // バックスラッシュによる改行文字のエスケープを破壊的に行う
+// このとき is_printable でない文字は読み飛ばす。
 static void	escape_message(char *str)
 {
 	size_t	i;
@@ -26,7 +34,7 @@ static void	escape_message(char *str)
 	{
 		if (!escaped && str[i] == '\\')
 			escaped = true;
-		else
+		else if (is_printable(str[i]))
 		{
 			if (escaped)
 			{
@@ -43,7 +51,7 @@ static void	escape_message(char *str)
 }
 
 // 文字 c の点群データを points_original に追加し、追加後の points_original の要素数を返す。
-static size_t	t3_place_character(t_system *system,
+static size_t	place_character(t_system *system,
 			const char c, size_t n_points, t_position pos)
 {
 	size_t		j;
@@ -72,7 +80,7 @@ static void	message_to_points(t_system *system, const char *message)
 	t_position	pos;
 	size_t		n_points;
 
-	t3_allocate_points(message, system);
+	t3_allocate_points_for_message(message, system);
 	n_points = 0;
 	i = 0;
 	pos[0] = 0;
@@ -81,7 +89,7 @@ static void	message_to_points(t_system *system, const char *message)
 	{
 		if (isprint(message[i]))
 		{
-			n_points = t3_place_character(system, message[i], n_points, pos);
+			n_points = place_character(system, message[i], n_points, pos);
 			pos[1] += 1;
 		}
 		else if (message[i] == '\n')
@@ -106,7 +114,7 @@ bool	t3_scan_message(t_system *sys)
 	{
 		escape_message(sys->message);
 		message_to_points(sys, sys->message);
-		t3_repoint(sys);
+		t3_realloc_points(sys);
 	}
 	return (true);
 }

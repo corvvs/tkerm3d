@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   t3_affine_compose.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkomatsu <tkomatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 15:43:32 by tkomatsu          #+#    #+#             */
-/*   Updated: 2022/02/20 15:43:34 by tkomatsu         ###   ########.fr       */
+/*   Updated: 2022/02/23 11:48:55 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "term3d.h"
 
-// アフィン変換を恒等変換に設定する
+// set affine transform `a` to an identity.
 void	t3_affine_identity(t_affine a)
 {
 	int	i;
@@ -25,7 +25,7 @@ void	t3_affine_identity(t_affine a)
 	}
 }
 
-// アフィン変換をコピーする
+// copy affine transform `src` to `dest`.
 void	t3_affine_copy(t_affine dest, const t_affine src)
 {
 	int	i;
@@ -40,7 +40,7 @@ void	t3_affine_copy(t_affine dest, const t_affine src)
 	}
 }
 
-// vec方向への平行移動とアフィン変換 src を合成したものを dest にセットする
+// compose affine transform `src` and a translation, and set it to `dest`.
 void	t3_affine_translate(
 	t_affine dest, const t_affine src, const t_vector3d vec)
 {
@@ -54,7 +54,7 @@ void	t3_affine_translate(
 	dest[2][3] = r23;
 }
 
-// vecによるスケーリングとアフィン変換 src を合成したものを dest にセットする
+// compose affine transform `src` and a scaling, and set it to `dest`.
 void	t3_affine_scale(t_affine dest, const t_affine src, const t_vector3d vec)
 {
 	int	i;
@@ -74,7 +74,7 @@ void	t3_affine_scale(t_affine dest, const t_affine src, const t_vector3d vec)
 	}
 }
 
-// アフィン変換 src1 と src2 の合成を dest にセットする
+// compose affine transform `src1` and `src2`, and set it to `dest`.
 void	t3_affine_compose(
 	t_affine dest, const t_affine src1, const t_affine src2)
 {

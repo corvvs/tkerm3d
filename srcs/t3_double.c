@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/19 00:46:28 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/21 11:58:53 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/22 14:51:09 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,26 @@ bool	t3_vectorize(const char *str, t_vector3d vector)
 	t3_destroy_strarray(splitted);
 	return (isfinite(vector[0]) && isfinite(vector[1])
 		&& isfinite(vector[2]));
+}
+
+bool	t3_strs_to_cubic_bezier(char **strs, t_cubic_bezier *bezier)
+{
+	double	ds[4];
+	int		i;
+
+	if (t3_count_lines(strs) != 4)
+		return (false);
+	i = 0;
+	while (i < 4)
+	{
+		ds[i] = strtod_wrapped(strs[i]);
+		if (!isfinite(ds[i]))
+			return (false);
+		i += 1;
+	}
+	bezier->x1 = ds[0];
+	bezier->y1 = ds[1];
+	bezier->x2 = ds[2];
+	bezier->y2 = ds[3];
+	return (true);
 }

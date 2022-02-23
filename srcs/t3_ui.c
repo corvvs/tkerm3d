@@ -6,14 +6,14 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 10:37:24 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/21 22:50:25 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/23 11:36:34 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "term3d.h"
 
 // points_animated を再確保する(点群のサイズが変わっている可能性があるため)
-void	t3_repoint(t_system *system)
+void	t3_realloc_points(t_system *system)
 {
 	size_t	size;
 
@@ -83,6 +83,7 @@ int	t3_get_key(void)
 	return (0);
 }
 
+// キー入力を受け取り、表示パラメータを更新する
 void	t3_update_by_key(t_system *system)
 {
 	const int	key = t3_get_key();
@@ -94,17 +95,17 @@ void	t3_update_by_key(t_system *system)
 	else if (strchr("wasd", key))
 		t3_update_offset(system, key);
 	else if (strchr("xz", key))
-		t3_update_flame(system, key);
+		t3_update_frame(system, key);
 	else if (strchr("12", key))
 		t3_update_scale(system, key);
 	else if (strchr("345", key))
-		t3_udpate_axis(system, key);
+		t3_update_axis(system, key);
 	else if (key == ' ')
 		t3_update_animate(system);
 	else if (key == 'r')
 		t3_reset_params(system);
+	else if (key == 'c')
+		t3_update_bezier(system);
 	else if (key == T3_CHAR_ESC && system->src_mode == T3_SRC_TEXT)
 		t3_scan_message(system);
-	else
-		dprintf(STDERR_FILENO, "key is %d('%c')\n", key, key);
 }

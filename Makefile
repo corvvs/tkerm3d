@@ -51,12 +51,14 @@ FILES = ft_raw_split.c \
         t3_setup.c \
         t3_timing.c \
         t3_ui.c \
+        t3_cubic_bezier.c\
         t3_update_animate.c \
         t3_update_axis.c \
-        t3_update_flame.c \
+        t3_update_frame.c \
         t3_update_offset.c \
         t3_update_omega.c \
-        t3_update_scale.c
+        t3_update_scale.c \
+        t3_update_bezier.c \
 
 SRCS = $(addprefix $(SRC_DIR), $(FILES))
 OBJS = $(addprefix $(OBJ_DIR), $(FILES:.c=.o))

@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/02 23:39:38 by corvvs            #+#    #+#             */
-/*   Updated: 2022/01/13 14:30:48 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/23 01:31:39 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ static size_t	get_len(char const *s, char c)
 	return (cnt);
 }
 
+// 空文字列を許容するsplit
 char	**ft_rawsplit(char const *s, char c)
 {
 	char	**split_strs;

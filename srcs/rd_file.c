@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 11:36:10 by corvvs            #+#    #+#             */
-/*   Updated: 2022/02/21 21:57:35 by corvvs           ###   ########.fr       */
+/*   Updated: 2022/02/22 14:22:44 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static void	deploy_buffer(t_plastic_buffer *buffer)
 	buffer->body = new_body;
 }
 
-static char	*read_from_fd(const int fd)
+char	*t3_read_from_fd(const int fd)
 {
 	char				read_buf[FT_BUFSIZ];
 	ssize_t				read_size;
@@ -78,7 +78,7 @@ char	*rd_read_file_content(const char *filename)
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
 		return (quit_with_error("failed to open file"));
-	content = read_from_fd(fd);
+	content = t3_read_from_fd(fd);
 	if (!content)
 		return (quit_with_error("failed to read file content"));
 	if (close(fd) == -1)
