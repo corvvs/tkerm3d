@@ -128,11 +128,11 @@ typedef struct s_optics {
 // transform_static:   回転直前までもっていくアフィン変換
 // transform_animated: 回転適用後のアフィン変換
 // src_mode:           描画するものが何なのか
-// n_glyphs:           グリフの数
-// gliphs:             グリフのデータ
+// glyphs:             グリフのデータ
 // message:            任意入力メッセージ
 // len_message:        現在のメッセージ長
-// n_pixelbuffer:      ピクセルバッファのサイズ
+// printbuffer:        プリントバッファ; ターミナルにwriteされる文字列データ。
+// n_printbuffer:      プリントバッファの**実際の**サイズ
 typedef struct s_system {
 	size_t		n_points;
 	t_vector3d	*points_original;
@@ -148,8 +148,8 @@ typedef struct s_system {
 	char		message[T3_MAX_MSGLEN + 1];
 	size_t		len_message;
 
-	size_t		n_pixelbuffer;
 	char		printbuffer[T3_MAX_HEIGHT * (T3_MAX_WIDTH + 1)];
+	size_t		n_printbuffer;
 }	t_system;
 
 char		**ft_rawsplit(char const *s, char c);
