@@ -30,7 +30,7 @@ void	t3_check_tty_out(void)
 	if (isatty(STDOUT_FILENO) == 1)
 		return ;
 	dprintf(STDERR_FILENO, T3_COLOR_YELLOW
-		"Error: stdout shoule be bound to tty."
+		"Error: stdout should be bound to tty."
 		T3_COLOR_RESET "\n");
 	exit(1);
 }
