@@ -12,7 +12,7 @@
 
 #include "term3d.h"
 
-// count occurences of a character `c` in a string `str`
+// count occurrences of a character `c` in a string `str`
 size_t	ft_cntchr(const char *str, char c)
 {
 	size_t	n;

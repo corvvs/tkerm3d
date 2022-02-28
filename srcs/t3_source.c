@@ -19,13 +19,13 @@ static int	stdin_to_tty(void)
 	return (dup2(STDOUT_FILENO, STDIN_FILENO));
 }
 
-static void	hande_text(t_system *system)
+static void	handle_text(t_system *system)
 {
 	system->src_mode = T3_SRC_TEXT;
 	if (!t3_read_glyphs(system->glyphs))
 	{
 		dprintf(STDERR_FILENO, T3_COLOR_YELLOW
-			"Error: %s: failed to read glyth file."
+			"Error: %s: failed to read glyph file."
 			T3_COLOR_RESET "\n", T3_GLYPH_FILE);
 		exit(1);
 	}
@@ -64,7 +64,7 @@ void	t3_read_source(t_system *system, int argc, char **argv)
 
 	system->src_mode = detect_source_type(argc, argv);
 	if (system->src_mode == T3_SRC_TEXT)
-		hande_text(system);
+		handle_text(system);
 	else if (system->src_mode == T3_SRC_FILE_3D)
 		handle_file_3d(system, filepath);
 	else
@@ -72,7 +72,7 @@ void	t3_read_source(t_system *system, int argc, char **argv)
 		if (system->src_mode == T3_SRC_TOO_MANY)
 		{
 			dprintf(STDERR_FILENO, T3_COLOR_YELLOW
-				"Error: too mamy argument."
+				"Error: too many argument."
 				T3_COLOR_RESET "\n");
 		}
 		else if (system->src_mode == T3_SRC_FILE_UNEXPECTED)
